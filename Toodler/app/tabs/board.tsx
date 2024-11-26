@@ -11,7 +11,7 @@ export default function Board() {
   const tasks = data.tasks;
 
   // Get the board ID from the route params
-  const BoardId = route.params?.boardId;
+  const BoardId = +(route.params?.boardId);
 
   // Helper function to get lists for a specific board
   const getListsForBoard = (boardId: number) => {
