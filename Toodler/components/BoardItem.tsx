@@ -1,29 +1,38 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 
-interface BoardItemProps {
-  name: string;
-  description?: string;
-  thumbnail?: string;
-  onPress: () => void;
-}
-
-export default function BoardItem({ name, description, thumbnail, onPress }: BoardItemProps) {
+export default function BoardItem({ board, onPress }: { board: any; onPress: () => void }) {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={{ uri: thumbnail || 'path/to/default-thumbnail.png' }} style={styles.thumbnail} />
-      <View style={styles.details}>
-        <Text style={styles.name}>{name}</Text>
-        {description && <Text style={styles.description}>{description}</Text>}
-      </View>
-    </TouchableOpacity>
+    <View style={styles.board}>
+      <Text style={styles.boardTitle}>{board.name}</Text>
+      <Pressable onPress={onPress}>
+        <Image source={{ uri: board.thumbnailPhoto }} style={styles.boardThumbnail} />
+      </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderColor: '#ccc' },
-  thumbnail: { width: 50, height: 50, borderRadius: 25 },
-  details: { marginLeft: 10, justifyContent: 'center' },
-  name: { fontSize: 16, fontWeight: 'bold' },
-  description: { fontSize: 14, color: '#666' },
+  board: {
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  boardTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  boardThumbnail: {
+    width: '100%',
+    height: 150,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
 });

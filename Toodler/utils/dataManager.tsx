@@ -1,13 +1,26 @@
-import data from '../data.json';
+import { Dispatch, SetStateAction } from 'react';
 
-export function getBoards() {
-  return data.boards;
-}
+// Define the Board type
+type Board = {
+  id: number;
+  name: string;
+  description?: string;
+  thumbnailPhoto: string;
+};
 
-export function getLists(boardId: Number) {
-  return data.lists.filter((list) => list.boardId === boardId);
-}
-
-export function getTasks(listId: Number) {
-  return data.tasks.filter((task) => task.listId === listId);
+// Create Board function with proper types
+export function createBoard(
+  boards: Board[],
+  setBoards: Dispatch<SetStateAction<Board[]>>,
+  name: string,
+  description: string,
+  photo: string
+) {
+  const newBoard: Board = {
+    id: boards.length + 1,
+    name,
+    description,
+    thumbnailPhoto: photo,
+  };
+  setBoards([...boards, newBoard]);
 }
