@@ -1,17 +1,21 @@
 import React from 'react';
-import { View, Text, FlatList, Image, StyleSheet, Pressable } from 'react-native';
-import data from '../../data.json'; // Import the JSON file
+import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
+import data from '../../data.json'; // Import the JSON file
 import getTextColor from '../../utils/getTextColor';
 
 export default function Board() {
   type BoardRouteProp = RouteProp<{ Board: { boardId: number } }, 'Board'>;
   const route = useRoute<BoardRouteProp>();
+  const boards = data.boards;
   const lists = data.lists;
   const tasks = data.tasks;
 
   // Get the board ID from the route params
   const BoardId = +(route.params?.boardId);
+
+  // Retrieve the specific board
+  const board = boards.find((b) => b.id === BoardId);
 
   // Helper function to get lists for a specific board
   const getListsForBoard = (boardId: number) => {
@@ -23,36 +27,63 @@ export default function Board() {
     return tasks.filter((task) => task.listId === listId);
   };
 
+  if (!board) {
+    return <Text style={styles.errorText}>Board not found. Please select a valid board.</Text>;
+  }
+
   return (
-    <FlatList
-      data={getListsForBoard(BoardId)}
-      keyExtractor={(list) => list.id.toString()}
-      renderItem={({ item: list }) => (
-        <View style={[styles.list, { backgroundColor: list.color }]}>
-          <Text style={[styles.listTitle, { color: getTextColor(list.color) }]}>
-            {list.name}
-          </Text>
-          {/* Render tasks for this list */}
-          <FlatList
-            data={getTasksForList(list.id)}
-            keyExtractor={(task) => task.id.toString()}
-            renderItem={({ item: task }) => (
-              <View style={styles.task}>
-                <Text style={styles.taskName}>
-                  {task.name} {task.isFinished ? "(Finished)" : "(Pending)"}
-                </Text>
-                <Text style={styles.taskDescription}>{task.description}</Text>
-              </View>
-            )}
-          />
-        </View>
-      )}
-    />
+    <View style={styles.container}>
+      {/* Display board details */}
+      <View style={styles.boardDetails}>
+        <Image
+          source={{ uri: board.thumbnailPhoto }}
+          style={styles.boardImage}
+        />
+        <Text style={styles.boardTitle}>{board.name}</Text>
+      </View>
+
+      {/* Display lists and tasks */}
+      <FlatList
+        data={getListsForBoard(BoardId)}
+        keyExtractor={(list) => list.id.toString()}
+        renderItem={({ item: list }) => (
+          <View style={[styles.list, { backgroundColor: list.color }]}>
+            <Text style={[styles.listTitle, { color: getTextColor(list.color) }]}>
+              {list.name}
+            </Text>
+            {/* Render tasks for this list */}
+            <FlatList
+              data={getTasksForList(list.id)}
+              keyExtractor={(task) => task.id.toString()}
+              renderItem={({ item: task }) => (
+                <View style={styles.task}>
+                  <Text style={styles.taskName}>
+                    {task.name} {task.isFinished ? "(Finished)" : "(Pending)"}
+                  </Text>
+                  <Text style={styles.taskDescription}>{task.description}</Text>
+                </View>
+              )}
+            />
+          </View>
+        )}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  board: {
+  container: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#f5f5f5',
+  },
+  errorText: {
+    fontSize: 18,
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  boardDetails: {
     marginBottom: 20,
     padding: 10,
     backgroundColor: '#fff',
@@ -62,17 +93,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 2,
+    alignItems: 'center', // Center the image and text
   },
-  boardTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  boardThumbnail: {
+  boardImage: {
     width: '100%',
     height: 150,
     borderRadius: 8,
     marginBottom: 10,
+  },
+  boardTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    textAlign: 'center',
+  },
+  boardDescription: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
   },
   list: {
     marginBottom: 10,
