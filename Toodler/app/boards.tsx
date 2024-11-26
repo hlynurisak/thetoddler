@@ -17,6 +17,21 @@ export default function Boards() {
     return tasks.filter((task) => task.listId === listId);
   };
 
+  // Helper function to get text color based on background color 
+  const getTextColor = (backgroundColor: string) => {
+    // Convert HEX to RGB
+    const hex = backgroundColor.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16) / 255;
+    const g = parseInt(hex.substring(2, 4), 16) / 255;
+    const b = parseInt(hex.substring(4, 6), 16) / 255;
+  
+    // Calculate luminance
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  
+    // Return black or white
+    return luminance > 0.5 ? '#000' : '#FFF';
+  }
+
   return (
     <FlatList
       data={boards}
@@ -33,8 +48,8 @@ export default function Boards() {
             data={getListsForBoard(board.id)}
             keyExtractor={(list) => list.id.toString()}
             renderItem={({ item: list }) => (
-              <View style={styles.list}>
-                <Text style={[styles.listTitle, { backgroundColor: list.color }]}>
+              <View style={[styles.list, { backgroundColor: list.color }]}>
+                <Text style={[styles.listTitle, { color: getTextColor(list.color) }]}>
                   {list.name}
                 </Text>
                 {/* Render tasks for this list */}
@@ -86,6 +101,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
     borderRadius: 8,
+    borderWidth: 0.2,
     backgroundColor: '#f9f9f9',
   },
   listTitle: {
@@ -94,7 +110,6 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 5,
     borderRadius: 4,
-    color: '#fff',
   },
   task: {
     marginBottom: 5,
