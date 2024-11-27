@@ -1,10 +1,16 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
-export default function BoardItem({ board, onPress }: { board: any; onPress: () => void }) {
+export default function BoardItem({ board, onPress, onEdit }: { board: any; onPress: () => void; onEdit: () => void }) {
   return (
     <View style={styles.board}>
-      <Text style={styles.boardTitle}>{board.name}</Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.boardTitle}>{board.name}</Text>
+        <TouchableOpacity style={styles.editButton} onPress={onEdit}>
+          <MaterialIcons name="more-vert" size={24} color="blue" />
+        </TouchableOpacity>
+      </View>
       <Pressable onPress={onPress}>
         <Image source={{ uri: board.thumbnailPhoto }} style={styles.boardThumbnail} />
       </Pressable>
@@ -24,15 +30,25 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
   },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   boardTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
   },
   boardThumbnail: {
     width: '100%',
     height: 150,
     borderRadius: 8,
     marginBottom: 10,
+  },
+  editButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
   },
 });
