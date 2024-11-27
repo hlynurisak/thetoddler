@@ -36,7 +36,7 @@ export default function Boards() {
       />
 
       <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-        <Text style={styles.addButtonText}>Create new board</Text>
+        <Text style={styles.addButtonText}>Create New Board</Text>
       </TouchableOpacity>
 
       <AddBoardModal

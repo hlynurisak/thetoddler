@@ -26,7 +26,7 @@ export default function AddBoardModal({
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
-          <Text style={styles.modalText}>Add a New Board</Text>
+          <Text style={styles.modalText}>Create New Board</Text>
           <TextInput
             style={styles.input}
             placeholder="Board Name"
