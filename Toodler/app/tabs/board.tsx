@@ -33,25 +33,24 @@ export default function Board() {
 
   return (
     <View style={styles.container}>
-      {/* Display board details */}
-      <View style={styles.boardDetails}>
-        <Image
-          source={{ uri: board.thumbnailPhoto }}
-          style={styles.boardImage}
-        />
-        <Text style={styles.boardTitle}>{board.name}</Text>
-      </View>
 
-      {/* Display lists and tasks */}
       <FlatList
         data={getListsForBoard(BoardId)}
         keyExtractor={(list) => list.id.toString()}
+        ListHeaderComponent={
+          <View style={styles.boardDetails}>
+            <Image
+              source={{ uri: board.thumbnailPhoto }}
+              style={styles.boardImage}
+            />
+            <Text style={styles.boardTitle}>{board.name}</Text>
+          </View>
+        }  
         renderItem={({ item: list }) => (
           <View style={[styles.list, { backgroundColor: list.color }]}>
             <Text style={[styles.listTitle, { color: getTextColor(list.color) }]}>
               {list.name}
             </Text>
-            {/* Render tasks for this list */}
             <FlatList
               data={getTasksForList(list.id)}
               keyExtractor={(task) => task.id.toString()}

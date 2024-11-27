@@ -21,7 +21,13 @@ export default function Boards() {
   const [newBoardPhoto, setNewBoardPhoto] = useState('');
 
   const handleCreateBoard = () => {
+    // Empty the input fields
+    setNewBoardName('');
+    setNewBoardDescription('');
+    setNewBoardPhoto('');
+    // Create a new board
     createBoard(boards, setBoards, newBoardName, newBoardDescription, newBoardPhoto);
+    // Empty variables again and close the modal
     setNewBoardName('');
     setNewBoardDescription('');
     setNewBoardPhoto('');
@@ -29,6 +35,7 @@ export default function Boards() {
   };
 
   const handleEditBoard = () => {
+    // Edit selected board
     if (boardToEdit) {
       setBoards((prevBoards) =>
         prevBoards.map((board) =>
@@ -40,6 +47,7 @@ export default function Boards() {
       setBoardToEdit(null);
       setEditModalVisible(false);
     }
+    // Clear variables
     setNewBoardName('');
     setNewBoardDescription('');
     setNewBoardPhoto('');
@@ -96,6 +104,9 @@ export default function Boards() {
           setBoardPhoto={setNewBoardPhoto}
           onDelete={() => {
             setBoards((prevBoards) => prevBoards.filter((board) => board.id !== boardToEdit.id));
+            setNewBoardName('');
+            setNewBoardDescription('');
+            setNewBoardPhoto('');
             setEditModalVisible(false);
           }}
         />
