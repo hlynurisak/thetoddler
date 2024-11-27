@@ -14,6 +14,7 @@ export default function BoardItem({ board, onPress, onEdit }: { board: any; onPr
       <Pressable onPress={onPress}>
         <Image source={{ uri: board.thumbnailPhoto }} style={styles.boardThumbnail} />
       </Pressable>
+      <Text>{board.description}</Text>
     </View>
   );
 }
