@@ -36,7 +36,7 @@ export default function Boards() {
       />
 
       <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-        <Text style={styles.addButtonText}>+</Text>
+        <Text style={styles.addButtonText}>Create new board</Text>
       </TouchableOpacity>
 
       <AddBoardModal
@@ -61,20 +61,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   addButton: {
-    backgroundColor: 'blue',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    elevation: 5,
+    position: 'absolute', 
+    bottom: 20, 
+    left: 0, 
+    right: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: '#007AFF', 
+    padding: 10, 
+    borderRadius: 10, 
+    marginHorizontal: 20, 
   },
   addButtonText: {
-    color: 'white',
-    fontSize: 30,
-    fontWeight: 'bold',
+    color: '#fff', 
+    fontWeight: 'bold', 
   },
 });
