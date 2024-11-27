@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useRouter } from 'expo-router';
-import initialData from '../data.json';
-import BoardItem from '../components/BoardItem';
-import AddBoardModal from '../components/AddBoardModal';
-import { createBoard, Board } from '../utils/dataManager';
-import EditBoardModal from '../components/EditBoardModal';
+import initialData from '@/data.json';
+import BoardItem from '@/components/BoardItem';
+import AddBoardModal from '@/components/AddBoardModal';
+import { createBoard, Board } from '@/utils/dataManager';
+import EditBoardModal from '@/components/EditBoardModal';
 
 export default function Boards() {
   const router = useRouter();
