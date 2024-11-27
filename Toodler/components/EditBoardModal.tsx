@@ -1,5 +1,6 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { View, Text, TextInput, Modal, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { Button, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function EditBoardModal({
   visible,
@@ -11,6 +12,7 @@ export default function EditBoardModal({
   setBoardDescription,
   boardPhoto,
   setBoardPhoto,
+  onDelete,
 }: {
   visible: boolean;
   onClose: () => void;
@@ -21,24 +23,30 @@ export default function EditBoardModal({
   setBoardDescription: (text: string) => void;
   boardPhoto: string;
   setBoardPhoto: (text: string) => void;
+  onDelete: () => void;
 }) {
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
-          <Text style={styles.modalText}>Edit Board</Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.modalText}>Edit Board</Text>
+            <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+              <MaterialIcons name="delete" size={24} color="blue" />
+            </TouchableOpacity>
+          </View>
           <TextInput
             style={styles.input}
             placeholder={boardName}
             value={boardName}
             onChangeText={setBoardName}
           />
-            <TextInput
-                style={styles.input}
-                placeholder={boardDescription}
-                value={boardDescription}
-                onChangeText={setBoardDescription}
-            />
+          <TextInput
+            style={styles.input}
+            placeholder={boardDescription}
+            value={boardDescription}
+            onChangeText={setBoardDescription}
+          />
           <TextInput
             style={styles.input}
             placeholder={boardPhoto}
@@ -92,5 +100,16 @@ const styles = StyleSheet.create({
     color: 'blue',
     textAlign: 'center',
     fontSize: 14,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  deleteButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
   },
 });

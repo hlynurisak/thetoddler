@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import initialData from '../data.json';
 import BoardItem from '../components/BoardItem';
 import AddBoardModal from '../components/AddBoardModal';
-import { createBoard } from '../utils/dataManager';
+import { createBoard, Board } from '../utils/dataManager';
 import EditBoardModal from '../components/EditBoardModal';
 
 export default function Boards() {
@@ -40,9 +40,12 @@ export default function Boards() {
       setBoardToEdit(null);
       setEditModalVisible(false);
     }
+    setNewBoardName('');
+    setNewBoardDescription('');
+    setNewBoardPhoto('');
   };
 
-  const openEditModal = (board) => {
+  const openEditModal = (board: Board) => {
     setBoardToEdit(board);
     setNewBoardName(board.name);
     setNewBoardDescription(board.description || '');
@@ -91,6 +94,10 @@ export default function Boards() {
           setBoardDescription={setNewBoardDescription}
           boardPhoto={newBoardPhoto}
           setBoardPhoto={setNewBoardPhoto}
+          onDelete={() => {
+            setBoards((prevBoards) => prevBoards.filter((board) => board.id !== boardToEdit.id));
+            setEditModalVisible(false);
+          }}
         />
       )}
     </View>

@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 
 // Define the Board type
-type Board = {
+export type Board = {
   id: number;
   name: string;
   description?: string;
