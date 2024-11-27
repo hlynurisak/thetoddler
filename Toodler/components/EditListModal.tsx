@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Modal } from 'react-native';
 
-export default function AddListModal({ boardId, onClose, onSave, visible }:
-  {
-    boardId: number,
-    onClose: () => void,
-    onSave: (list: { id: number; name: string; color: string; boardId: number }) => void,
-    visible: boolean,
-  }) {
+export default function EditListModal({ list, onClose, onSave  }:
+    {
+        list: { id: number; name: string; color: string; boardId: number },
+        onClose: () => void,
+        onSave: (list: { id: number; name: string; color: string; boardId: number }) => void,
+      })  {
 
-  const [name, setName] = useState('');
-  const [color, setColor] = useState('');
+  const [name, setName] = useState(list.name);
+  const [color, setColor] = useState(list.color);
 
   const handleSave = () => {
     if (!name) {
@@ -18,20 +17,14 @@ export default function AddListModal({ boardId, onClose, onSave, visible }:
       return;
     }
 
-    const newList = {
-      id: Date.now(),
-      name,
-      color: color || '#ffffff',
-      boardId,
-    };
-
-    onSave(newList);
+    const updatedList = { ...list, name, color };
+    onSave(updatedList);
   };
 
   return (
     <Modal transparent={true} visible={true}>
       <View style={styles.modalContainer}>
-        <Text style={styles.title}>Add New List</Text>
+        <Text style={styles.title}>Edit List</Text>
         <TextInput
           placeholder="List Name"
           value={name}

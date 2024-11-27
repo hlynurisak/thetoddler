@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
-import data from '../../data.json'; // Import the JSON file
-import getTextColor from '../../utils/getTextColor';
+import data from '@/data.json'; // Import the JSON file
+import getTextColor from '@/utils/getTextColor';
+import AddListModal from '@/components/AddListModal';
+import EditListModal from '@/components/EditListModal';
+
 
 export default function Board() {
   type BoardRouteProp = RouteProp<{ Board: { boardId: number } }, 'Board'>;
