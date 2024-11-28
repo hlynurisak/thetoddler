@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
-import { MaterialIcons } from '@expo/vector-icons'; // For the three-dot menu
+import { MaterialIcons } from '@expo/vector-icons';
 import { useBoardsContext } from '@/hooks/useBoardsContext';
 import data from '@/data.json';
 import getTextColor from '@/utils/getTextColor';
 import AddListModal from '@/components/AddListModal';
 import EditListModal from '@/components/EditListModal';
+import AddTaskModal from '@/components/AddTaskModal';
 
 export default function Board() {
   type BoardRouteProp = RouteProp<{ Board: { boardId: number } }, 'Board'>;
@@ -17,35 +18,37 @@ export default function Board() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [boardLists, setBoardLists] = useState(data.lists);
-  const [editingList, setEditingList] = useState<{
-    id: number;
-    name: string;
-    color: string;
-    boardId: number;
-  } | null>(null);
-  const tasks = data.tasks;
+  const [tasks, setTasks] = useState(data.tasks);
+  const [editingList, setEditingList] = useState(null);
+  const [addTaskModalVisible, setAddTaskModalVisible] = useState(false);
+  const [selectedListId, setSelectedListId] = useState(null);
 
   const BoardId = +(route.params?.boardId);
   const board = boards.find((b) => b.id === BoardId);
 
-  const getListsForBoard = (boardId: number) =>
+  const getListsForBoard = (boardId) =>
     boardLists.filter((list) => list.boardId === boardId);
 
-  const getTasksForList = (listId: number) =>
+  const getTasksForList = (listId) =>
     tasks.filter((task) => task.listId === listId);
 
-  const handleAddList = (newList: { id: number; name: string; color: string; boardId: number }) => {
+  const handleAddList = (newList) => {
     setBoardLists((prevLists) => [...prevLists, newList]);
   };
 
-  const handleEditList = (updatedList: { id: number; name: string; color: string; boardId: number }) => {
+  const handleEditList = (updatedList) => {
     setBoardLists((prevLists) =>
       prevLists.map((list) => (list.id === updatedList.id ? updatedList : list))
     );
   };
 
-  const handleDeleteList = (listId: number) => {
+  const handleDeleteList = (listId) => {
     setBoardLists((prevLists) => prevLists.filter((list) => list.id !== listId));
+  };
+
+  const handleAddTask = (newTask) => {
+    setTasks((prevTasks) => [...prevTasks, newTask]);
+    setAddTaskModalVisible(false);
   };
 
   if (!board) {
@@ -68,14 +71,25 @@ export default function Board() {
           <View style={[styles.list, { backgroundColor: list.color }]}>
             <View style={styles.listHeader}>
               <Text style={[styles.listTitle, { color: getTextColor(list.color) }]}>{list.name}</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  setEditingList(list);
-                  setEditModalVisible(true);
-                }}
-              >
-                <MaterialIcons name="more-vert" size={24} color="black" />
-              </TouchableOpacity>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setAddTaskModalVisible(true);
+                    setSelectedListId(list.id);
+                  }}
+                  style={{ marginRight: 10 }}
+                >
+                  <MaterialIcons name="add" size={24} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setEditingList(list);
+                    setEditModalVisible(true);
+                  }}
+                >
+                  <MaterialIcons name="more-vert" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
             </View>
             <FlatList
               data={getTasksForList(list.id)}
@@ -129,6 +143,18 @@ export default function Board() {
             handleDeleteList(editingList.id);
             setEditModalVisible(false);
           }}
+        />
+      )}
+
+      {selectedListId && (
+        <AddTaskModal
+          visible={addTaskModalVisible}
+          onClose={() => {
+            setAddTaskModalVisible(false);
+            setSelectedListId(null);
+          }}
+          onSave={handleAddTask}
+          listId={selectedListId}
         />
       )}
     </View>
