@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity, Touchable } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function AddTaskModal({
