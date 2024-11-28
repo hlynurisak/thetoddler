@@ -26,7 +26,12 @@ export default function AddBoardModal({
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
-          <Text style={styles.modalText}>Create New Board</Text>
+          <View style={styles.headerRow}>
+            <Text style={styles.modalText}>Create New Board</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Text style={styles.cancelButtonText}>X</Text>
+            </TouchableOpacity>
+          </View>
           <TextInput
             style={styles.input}
             placeholder="Board Name"
@@ -46,9 +51,6 @@ export default function AddBoardModal({
             onChangeText={setBoardPhoto}
           />
           <Button title="Create Board" onPress={onAddBoard} />
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.modalButtonText}>Close</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -73,11 +75,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15, // Adds spacing between the header and the input fields
+  },
   modalText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 15,
-    textAlign: 'center',
+    textAlign: 'center', // Centers the text within its container
+  },
+  cancelButtonText: {
+    color: 'grey',
+    fontSize: 18, // Match font size with modalText
   },
   input: {
     borderWidth: 1,

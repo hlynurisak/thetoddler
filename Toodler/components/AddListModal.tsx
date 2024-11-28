@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Modal } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 
 export default function AddListModal({
-  boardId,
+  visible,
   onClose,
   onSave,
-  visible,
+  boardId,
 }: {
-  boardId: number;
+  visible: boolean;
   onClose: () => void;
   onSave: (list: { id: number; name: string; color: string; boardId: number }) => void;
-  visible: boolean;
+  boardId: number;
 }) {
   const [name, setName] = useState('');
   const [color, setColor] = useState('');
@@ -34,23 +34,29 @@ export default function AddListModal({
   };
 
   return (
-    <Modal transparent={true} visible={visible}>
-      <View style={styles.modalContainer}>
-        <Text style={styles.modalText}>Add New List</Text>
-        <TextInput
-          placeholder="List Name"
-          value={name}
-          onChangeText={setName}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Color (optional)"
-          value={color}
-          onChangeText={setColor}
-          style={styles.input}
-        />
-        <Button title="Save" onPress={handleSave} />
-        <Button title="Cancel" onPress={onClose} />
+    <Modal animationType="slide" transparent={true} visible={visible}>
+      <View style={styles.modalBackground}>
+        <View style={styles.modalContainer}>
+          <View style={styles.headerRow}>
+            <Text style={styles.modalText}>Create New List</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Text style={styles.cancelButtonText}>X</Text>
+            </TouchableOpacity>
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="List Name"
+            value={name}
+            onChangeText={setName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Color (optional)"
+            value={color}
+            onChangeText={setColor}
+          />
+          <Button title="Save" onPress={handleSave}/>
+        </View>
       </View>
     </Modal>
   );
@@ -75,11 +81,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15, // Adds spacing between the header and the input fields
+  },
   modalText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 15,
-    textAlign: 'center',
+    textAlign: 'center', // Centers the text within its container
+  },
+  cancelButtonText: {
+    color: 'grey',
+    fontSize: 18, // Match font size with modalText
   },
   input: {
     borderWidth: 1,
