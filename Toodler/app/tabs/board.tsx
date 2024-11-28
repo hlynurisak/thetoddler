@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, Button } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
-import { useBoardsContext } from '@/hooks/useBoardsContext'; // Import the custom hook
-import data from '@/data.json'; // Keep importing for lists and tasks
+import { MaterialIcons } from '@expo/vector-icons'; // For the three-dot menu
+import { useBoardsContext } from '@/hooks/useBoardsContext';
+import data from '@/data.json';
 import getTextColor from '@/utils/getTextColor';
 import AddListModal from '@/components/AddListModal';
 import EditListModal from '@/components/EditListModal';
@@ -11,10 +12,8 @@ export default function Board() {
   type BoardRouteProp = RouteProp<{ Board: { boardId: number } }, 'Board'>;
   const route = useRoute<BoardRouteProp>();
 
-  // Use the boards from context
   const { boards } = useBoardsContext();
 
-  // Static data for lists and tasks
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [boardLists, setBoardLists] = useState(data.lists);
@@ -26,36 +25,25 @@ export default function Board() {
   } | null>(null);
   const tasks = data.tasks;
 
-  // Get the board ID from the route params
   const BoardId = +(route.params?.boardId);
-
-  // Retrieve the specific board from context
   const board = boards.find((b) => b.id === BoardId);
 
-  // Helper functions remain the same
-  const getListsForBoard = (boardId: number) => {
-    return boardLists.filter((list) => list.boardId === boardId);
-  };
+  const getListsForBoard = (boardId: number) =>
+    boardLists.filter((list) => list.boardId === boardId);
 
-  const getTasksForList = (listId: number) => {
-    return tasks.filter((task) => task.listId === listId);
-  };
+  const getTasksForList = (listId: number) =>
+    tasks.filter((task) => task.listId === listId);
 
-  // Handle adding a new list
   const handleAddList = (newList: { id: number; name: string; color: string; boardId: number }) => {
     setBoardLists((prevLists) => [...prevLists, newList]);
   };
 
-  // Handle editing a list
   const handleEditList = (updatedList: { id: number; name: string; color: string; boardId: number }) => {
     setBoardLists((prevLists) =>
-      prevLists.map((list) =>
-        list.id === updatedList.id ? updatedList : list
-      )
+      prevLists.map((list) => (list.id === updatedList.id ? updatedList : list))
     );
   };
 
-  // Handle deleting a list
   const handleDeleteList = (listId: number) => {
     setBoardLists((prevLists) => prevLists.filter((list) => list.id !== listId));
   };
@@ -71,55 +59,41 @@ export default function Board() {
         keyExtractor={(list) => list.id.toString()}
         ListHeaderComponent={
           <View style={styles.boardDetails}>
-            <Image
-              source={{ uri: board.thumbnailPhoto }}
-              style={styles.boardImage}
-            />
+            <Image source={{ uri: board.thumbnailPhoto }} style={styles.boardImage} />
             <Text style={styles.boardTitle}>{board.name}</Text>
-            {board.description && (
-              <Text style={styles.boardDescription}>{board.description}</Text>
-            )}
+            {board.description && <Text style={styles.boardDescription}>{board.description}</Text>}
           </View>
         }
         renderItem={({ item: list }) => (
           <View style={[styles.list, { backgroundColor: list.color }]}>
-            <Text style={[styles.listTitle, { color: getTextColor(list.color) }]}>
-              {list.name}
-            </Text>
+            <View style={styles.listHeader}>
+              <Text style={[styles.listTitle, { color: getTextColor(list.color) }]}>{list.name}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setEditingList(list);
+                  setEditModalVisible(true);
+                }}
+              >
+                <MaterialIcons name="more-vert" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
             <FlatList
               data={getTasksForList(list.id)}
               keyExtractor={(task) => task.id.toString()}
               renderItem={({ item: task }) => (
                 <View style={styles.task}>
                   <Text style={styles.taskName}>
-                    {task.name} {task.isFinished ? "(Finished)" : "(Pending)"}
+                    {task.name} {task.isFinished ? '(Finished)' : '(Pending)'}
                   </Text>
                   <Text style={styles.taskDescription}>{task.description}</Text>
                 </View>
               )}
             />
-            <View style={styles.listActions}>
-              <Button
-                title="Edit"
-                onPress={() => {
-                  setEditingList(list);
-                  setEditModalVisible(true);
-                }}
-              />
-              <Button
-                title="Delete"
-                onPress={() => handleDeleteList(list.id)}
-                color="red"
-              />
-            </View>
           </View>
         )}
       />
 
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => setAddModalVisible(true)}
-      >
+      <TouchableOpacity style={styles.addButton} onPress={() => setAddModalVisible(true)}>
         <Text style={styles.addButtonText}>Create New List</Text>
       </TouchableOpacity>
 
@@ -134,15 +108,27 @@ export default function Board() {
         <EditListModal
           visible={editModalVisible}
           onClose={() => setEditModalVisible(false)}
-          onSave={(updatedList) => {
-            setBoardLists((prevLists) =>
-              prevLists.map((list) =>
-                list.id === updatedList.id ? updatedList : list
-              )
-            );
-            setEditModalVisible(false); // Close the modal after saving
+          onEditList={() => {
+            handleEditList({
+              id: editingList.id,
+              name: editingList.name,
+              color: editingList.color,
+              boardId: editingList.boardId,
+            });
+            setEditModalVisible(false);
           }}
-          list={editingList}
+          listName={editingList.name}
+          setListName={(name) =>
+            setEditingList((prev) => (prev ? { ...prev, name } : prev))
+          }
+          listColor={editingList.color}
+          setListColor={(color) =>
+            setEditingList((prev) => (prev ? { ...prev, color } : prev))
+          }
+          onDelete={() => {
+            handleDeleteList(editingList.id);
+            setEditModalVisible(false);
+          }}
         />
       )}
     </View>
@@ -197,6 +183,11 @@ const styles = StyleSheet.create({
     borderWidth: 0.2,
     backgroundColor: '#f9f9f9',
   },
+  listHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   listTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -217,11 +208,6 @@ const styles = StyleSheet.create({
   taskDescription: {
     fontSize: 14,
     color: '#555',
-  },
-  listActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
   },
   addButton: {
     position: 'absolute',

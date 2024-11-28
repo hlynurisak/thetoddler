@@ -1,59 +1,52 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import React from 'react';
+import { Button, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function EditListModal({
   visible,
   onClose,
-  onSave,
-  list,
+  onEditList,
+  listName,
+  setListName,
+  listColor,
+  setListColor,
+  onDelete,
 }: {
   visible: boolean;
   onClose: () => void;
-  onSave: (updatedList: { id: number; name: string; color: string; boardId: number }) => void;
-  list: { id: number; name: string; color: string; boardId: number };
+  onEditList: () => void;
+  listName: string;
+  setListName: (text: string) => void;
+  listColor: string;
+  setListColor: (text: string) => void;
+  onDelete: () => void;
 }) {
-  const [name, setName] = useState(list.name);
-  const [color, setColor] = useState(list.color);
-
-  const handleSave = () => {
-    if (!name) {
-      alert('Name is required');
-      return;
-    }
-
-    const updatedList = {
-      ...list, // Preserve other list properties
-      name,
-      color,
-    };
-
-    onSave(updatedList); // Pass the updated list back to the parent
-    onClose(); // Close the modal
-  };
-
   return (
-    <Modal animationType="slide" transparent={true} visible={visible}>
+    <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
-          <View style={styles.headerRow}>
+          <View style={styles.titleRow}>
             <Text style={styles.modalText}>Edit List</Text>
-            <TouchableOpacity onPress={onClose}>
-              <Text style={styles.cancelButtonText}>X</Text>
+            <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+              <MaterialIcons name="delete" size={24} color="red" />
             </TouchableOpacity>
           </View>
           <TextInput
             style={styles.input}
             placeholder="List Name"
-            value={name}
-            onChangeText={setName}
+            value={listName}
+            onChangeText={setListName}
           />
           <TextInput
             style={styles.input}
-            placeholder="Color (optional)"
-            value={color}
-            onChangeText={setColor}
+            placeholder="Color (Optional)"
+            value={listColor}
+            onChangeText={setListColor}
           />
-          <Button title="Save" onPress={handleSave} />
+          <Button title="Update" onPress={onEditList} />
+          <TouchableOpacity onPress={onClose}>
+            <Text style={styles.modalButtonText}>Close</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -73,12 +66,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
   },
-  headerRow: {
+  titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -88,9 +77,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  cancelButtonText: {
-    color: 'grey',
-    fontSize: 18,
+  deleteButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
   },
   input: {
     borderWidth: 1,
@@ -99,5 +89,11 @@ const styles = StyleSheet.create({
     padding: 8,
     marginBottom: 10,
     backgroundColor: '#fff',
+  },
+  modalButtonText: {
+    marginTop: 10,
+    color: 'blue',
+    textAlign: 'center',
+    fontSize: 14,
   },
 });
