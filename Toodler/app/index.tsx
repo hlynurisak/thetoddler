@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import { View, FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useRouter } from 'expo-router';
-import initialData from '@/data.json';
+// import initialData from '@/data.json';
 import BoardItem from '@/components/BoardItem';
 import AddBoardModal from '@/components/AddBoardModal';
-import { createBoard, Board } from '@/utils/dataManager';
+// import { createBoard, Board } from '@/utils/dataManager';
 import EditBoardModal from '@/components/EditBoardModal';
+
+import { useBoardsContext } from '@/hooks/useBoardsContext'; // Import custom hook
+import { Board } from '@/contexts/BoardsContext'; // Import Board type
+
 
 export default function Boards() {
   const router = useRouter();
-
-  const [boards, setBoards] = useState(initialData.boards);
+  const { boards, setBoards } = useBoardsContext(); // Use boards from context
+  
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [boardToEdit, setBoardToEdit] = useState<{ id: number; name: string; description?: string; thumbnailPhoto: string } | null>(null);
+  const [boardToEdit, setBoardToEdit] = useState<Board | null>(null);
 
   // States for new board creation & edits
   const [newBoardName, setNewBoardName] = useState('');
@@ -21,16 +25,19 @@ export default function Boards() {
   const [newBoardPhoto, setNewBoardPhoto] = useState('');
 
   const handleCreateBoard = () => {
-    // Empty the input fields
-    setNewBoardName('');
-    setNewBoardDescription('');
-    setNewBoardPhoto('');
     // Create a new board
-    createBoard(boards, setBoards, newBoardName, newBoardDescription, newBoardPhoto);
-    // Empty variables again and close the modal
+    const newBoard: Board = {
+      id: Date.now(), // Or use a better unique ID generator
+      name: newBoardName,
+      description: newBoardDescription,
+      thumbnailPhoto: newBoardPhoto,
+    };
+    setBoards([...boards, newBoard]);
+    // Clear the input fields
     setNewBoardName('');
     setNewBoardDescription('');
     setNewBoardPhoto('');
+    // Close the modal
     setAddModalVisible(false);
   };
 
@@ -51,6 +58,18 @@ export default function Boards() {
     setNewBoardName('');
     setNewBoardDescription('');
     setNewBoardPhoto('');
+  };
+
+  const handleDeleteBoard = () => {
+    if (boardToEdit) {
+      setBoards((prevBoards) => prevBoards.filter((board) => board.id !== boardToEdit.id));
+      setBoardToEdit(null);
+      setEditModalVisible(false);
+      // Clear inputs
+      setNewBoardName('');
+      setNewBoardDescription('');
+      setNewBoardPhoto('');
+    }
   };
 
   const openEditModal = (board: Board) => {
@@ -102,13 +121,7 @@ export default function Boards() {
           setBoardDescription={setNewBoardDescription}
           boardPhoto={newBoardPhoto}
           setBoardPhoto={setNewBoardPhoto}
-          onDelete={() => {
-            setBoards((prevBoards) => prevBoards.filter((board) => board.id !== boardToEdit.id));
-            setNewBoardName('');
-            setNewBoardDescription('');
-            setNewBoardPhoto('');
-            setEditModalVisible(false);
-          }}
+          onDelete={handleDeleteBoard}
         />
       )}
     </View>

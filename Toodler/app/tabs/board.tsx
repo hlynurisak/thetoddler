@@ -1,32 +1,34 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
-import data from '@/data.json'; // Import the JSON file
+import { useBoardsContext } from '@/hooks/useBoardsContext'; // Import the custom hook
+import data from '@/data.json'; // Keep importing for lists and tasks
 import getTextColor from '@/utils/getTextColor';
 import AddListModal from '@/components/AddListModal';
-
 
 export default function Board() {
   type BoardRouteProp = RouteProp<{ Board: { boardId: number } }, 'Board'>;
   const route = useRoute<BoardRouteProp>();
-  const boards = data.boards;
-  const tasks = data.tasks;
 
+  // Use the boards from context
+  const { boards } = useBoardsContext();
+
+  // Keep using static data for lists and tasks for now
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [boardLists, setBoardLists] = useState(data.lists);
+  const tasks = data.tasks;
 
   // Get the board ID from the route params
   const BoardId = +(route.params?.boardId);
 
-  // Retrieve the specific board
+  // Retrieve the specific board from context
   const board = boards.find((b) => b.id === BoardId);
 
-  // Helper function to get lists for a specific board
+  // Helper functions remain the same
   const getListsForBoard = (boardId: number) => {
     return boardLists.filter((list) => list.boardId === boardId);
   };
 
-  // Helper function to get tasks for a specific list
   const getTasksForList = (listId: number) => {
     return tasks.filter((task) => task.listId === listId);
   };
@@ -37,7 +39,6 @@ export default function Board() {
 
   return (
     <View style={styles.container}>
-
       <FlatList
         data={getListsForBoard(BoardId)}
         keyExtractor={(list) => list.id.toString()}
@@ -48,8 +49,11 @@ export default function Board() {
               style={styles.boardImage}
             />
             <Text style={styles.boardTitle}>{board.name}</Text>
+            {board.description && (
+              <Text style={styles.boardDescription}>{board.description}</Text>
+            )}    
           </View>
-        }  
+        }
         renderItem={({ item: list }) => (
           <View style={[styles.list, { backgroundColor: list.color }]}>
             <Text style={[styles.listTitle, { color: getTextColor(list.color) }]}>
