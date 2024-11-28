@@ -1,18 +1,19 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import data from '@/data.json'; // Import the JSON file
 import getTextColor from '@/utils/getTextColor';
 import AddListModal from '@/components/AddListModal';
-import EditListModal from '@/components/EditListModal';
 
 
 export default function Board() {
   type BoardRouteProp = RouteProp<{ Board: { boardId: number } }, 'Board'>;
   const route = useRoute<BoardRouteProp>();
   const boards = data.boards;
-  const lists = data.lists;
   const tasks = data.tasks;
+
+  const [addModalVisible, setAddModalVisible] = useState(false);
+  const [boardLists, setBoardLists] = useState(data.lists);
 
   // Get the board ID from the route params
   const BoardId = +(route.params?.boardId);
@@ -22,7 +23,7 @@ export default function Board() {
 
   // Helper function to get lists for a specific board
   const getListsForBoard = (boardId: number) => {
-    return lists.filter((list) => list.boardId === boardId);
+    return boardLists.filter((list) => list.boardId === boardId);
   };
 
   // Helper function to get tasks for a specific list
@@ -68,6 +69,20 @@ export default function Board() {
             />
           </View>
         )}
+      />
+      <TouchableOpacity style={styles.addButton} onPress={() => setAddModalVisible(true)}>
+        <Text style={styles.addButtonText}>Create New List</Text>
+      </TouchableOpacity>
+
+      <AddListModal
+        boardId={BoardId} // Pass the current board's ID
+        visible={addModalVisible}
+        onClose={() => setAddModalVisible(false)}
+        onSave={(newList) => {
+          // Update the lists state
+          setBoardLists((prevLists) => [...prevLists, newList]);
+          setAddModalVisible(false);
+        }}
       />
     </View>
   );
@@ -141,5 +156,21 @@ const styles = StyleSheet.create({
   taskDescription: {
     fontSize: 14,
     color: '#555',
+  },
+  addButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#007AFF',
+    padding: 10,
+    borderRadius: 10,
+    marginHorizontal: 20,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

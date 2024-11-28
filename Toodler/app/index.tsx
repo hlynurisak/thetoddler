@@ -15,7 +15,7 @@ export default function Boards() {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [boardToEdit, setBoardToEdit] = useState<{ id: number; name: string; description?: string; thumbnailPhoto: string } | null>(null);
 
-  // State for new board creation
+  // States for new board creation & edits
   const [newBoardName, setNewBoardName] = useState('');
   const [newBoardDescription, setNewBoardDescription] = useState('');
   const [newBoardPhoto, setNewBoardPhoto] = useState('');

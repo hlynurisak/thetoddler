@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 
-// Define the Board type
+/* Custom type declarations */
 export type Board = {
   id: number;
   name: string;
@@ -8,7 +8,24 @@ export type Board = {
   thumbnailPhoto: string;
 };
 
-// Function to create a new board
+export type List = {
+  id: number;
+  name: string;
+  color: string;
+  boardId: number;
+};
+
+export type Task = {
+  id: number;
+  name: string;
+  description?: string;
+  isFinished: boolean;
+  listId: number;
+};
+
+
+/* Create and update data */
+// Create a new board with given parameters and auto-incremented ID
 export function createBoard(
   boards: Board[],
   setBoards: Dispatch<SetStateAction<Board[]>>,
@@ -25,7 +42,7 @@ export function createBoard(
   setBoards([...boards, newBoard]);
 }
 
-// Function to edit/update an existing board
+// Update the board with the given ID
 export function updateBoard(
   boards: Board[],
   setBoards: Dispatch<SetStateAction<Board[]>>,
@@ -46,4 +63,40 @@ export function updateBoard(
     return board;
   });
   setBoards(updatedBoards);
+}
+
+export function createList(
+  lists: List[],
+  setLists: Dispatch<SetStateAction<List[]>>,
+  name: string,
+  color: string,
+  boardId: number
+) {
+  const newList: List = {
+    id: lists.length + 1,
+    name,
+    color,
+    boardId,
+  };
+  setLists([...lists, newList]);
+}
+
+export function updateList(
+  lists: List[],
+  setLists: Dispatch<SetStateAction<List[]>>,
+  id: number,
+  name: string,
+  color: string
+) {
+  const updatedLists = lists.map((list) => {
+    if (list.id === id) {
+      return {
+        ...list,
+        name,
+        color,
+      };
+    }
+    return list;
+  });
+  setLists(updatedLists);
 }

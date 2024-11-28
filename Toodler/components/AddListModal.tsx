@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Modal } from 'react-native';
 
-export default function AddListModal({ boardId, onClose, onSave, visible }:
-  {
-    boardId: number,
-    onClose: () => void,
-    onSave: (list: { id: number; name: string; color: string; boardId: number }) => void,
-    visible: boolean,
-  }) {
-
+export default function AddListModal({
+  boardId,
+  onClose,
+  onSave,
+  visible,
+}: {
+  boardId: number;
+  onClose: () => void;
+  onSave: (list: { id: number; name: string; color: string; boardId: number }) => void;
+  visible: boolean;
+}) {
   const [name, setName] = useState('');
   const [color, setColor] = useState('');
 
@@ -19,19 +22,21 @@ export default function AddListModal({ boardId, onClose, onSave, visible }:
     }
 
     const newList = {
-      id: Date.now(),
+      id: Date.now(), // Unique ID for the new list
       name,
-      color: color || '#ffffff',
-      boardId,
+      color: color || '#ffffff', // Default color if none is provided
+      boardId, // Attach the board ID passed as a prop
     };
 
-    onSave(newList);
+    onSave(newList); // Pass the new list back to the parent
+    setName(''); // Reset fields
+    setColor('');
   };
 
   return (
-    <Modal transparent={true} visible={true}>
+    <Modal transparent={true} visible={visible}>
       <View style={styles.modalContainer}>
-        <Text style={styles.title}>Add New List</Text>
+        <Text style={styles.modalText}>Add New List</Text>
         <TextInput
           placeholder="List Name"
           value={name}
@@ -51,25 +56,43 @@ export default function AddListModal({ boardId, onClose, onSave, visible }:
   );
 }
 
+
 const styles = StyleSheet.create({
-  modalContainer: {
+  modalBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  title: {
+  modalContainer: {
+    width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  modalText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 15,
+    textAlign: 'center',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
+    borderColor: '#ddd',
+    borderRadius: 4,
+    padding: 8,
     marginBottom: 10,
-    width: '100%',
-    borderRadius: 5,
+    backgroundColor: '#fff',
+  },
+  modalButtonText: {
+    marginTop: 10,
+    color: 'blue',
+    textAlign: 'center',
+    fontSize: 14,
   },
 });
