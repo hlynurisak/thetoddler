@@ -26,6 +26,7 @@ export default function ListItem({ name, color, listId }: ListItemProps) {
         <AddTaskModal
           visible={AddTaskModalVisible}
           onClose={() => setAddTaskModalVisible(false)}
+          onSave={() => {}}
           listId={listId}
         />
       )}
