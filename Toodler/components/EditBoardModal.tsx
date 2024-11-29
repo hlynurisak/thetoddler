@@ -1,4 +1,3 @@
-import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Button, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -95,19 +94,20 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     color: 'grey',
-    fontSize: 18, // Match font size with modalText
+    fontSize: 18,
   },
   deleteButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#ff4d4d',
+    alignItems: 'center',
   },
   deleteButtonText: {
-    marginTop: 5,
-    color: 'red',
-    textAlign: 'center',
-    fontSize: 14,
-  },
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },  
   input: {
     borderWidth: 1,
     borderColor: '#ddd',

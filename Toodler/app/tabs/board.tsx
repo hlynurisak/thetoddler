@@ -138,6 +138,7 @@ export default function Board() {
             />
           </View>
         )}
+        contentContainerStyle={{ paddingBottom: 50 }}
       />
 
       <TouchableOpacity style={styles.addButton} onPress={() => setAddModalVisible(true)}>
@@ -194,10 +195,7 @@ export default function Board() {
       {selectedTask && (
         <EditTaskModal
           visible={editTaskModalVisible}
-          onClose={() => {
-            setEditTaskModalVisible(false);
-            setSelectedTask(null);
-          }}
+          onClose={() => setEditTaskModalVisible(false)}
           onEditTask={(updatedTask) => {
             handleEditTask(updatedTask);
             setEditTaskModalVisible(false);

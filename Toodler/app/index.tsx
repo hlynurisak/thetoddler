@@ -89,6 +89,7 @@ export default function Boards() {
             onEdit={() => openEditModal(board)}
           />
         )}
+        contentContainerStyle={{ paddingBottom: 50 }}
       />
 
       <TouchableOpacity style={styles.addButton} onPress={() => setAddModalVisible(true)}>

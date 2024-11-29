@@ -20,7 +20,13 @@ export default function EditTaskModal({
 }: {
   visible: boolean;
   onClose: () => void;
-  onEditTask: () => void;
+  onEditTask: (updatedTask: {
+    id: number;
+    name: string;
+    description: string;
+    isFinished: boolean;
+    listId: number;
+  }) => void;
   taskName: string;
   setTaskName: (text: string) => void;
   taskDescription: string;
@@ -28,20 +34,27 @@ export default function EditTaskModal({
   taskIsFinished: boolean;
   setTaskIsFinished: (value: boolean) => void;
   selectedList: number;
-  setSelectedList: (value: number) => void; // Updated here
+  setSelectedList: (value: number) => void;
   lists: { id: number; name: string }[];
   onDelete: () => void;
 }) {
+  const handleSave = () => {
+    const updatedTask = {
+      id: Date.now(),
+      name: taskName,
+      description: taskDescription,
+      isFinished: taskIsFinished,
+      listId: selectedList,
+    };
+    onEditTask(updatedTask);
+  };
+
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
-          <View style={styles.headerRow}>
-            <Text style={styles.modalText}>Edit Task</Text>
-            <TouchableOpacity onPress={onClose}>
-              <Text style={styles.cancelButtonText}>X</Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.modalText}>Edit Task</Text>
+          {/* Inputs */}
           <TextInput
             style={styles.input}
             placeholder="Task Name"
@@ -54,27 +67,30 @@ export default function EditTaskModal({
             value={taskDescription}
             onChangeText={setTaskDescription}
           />
+          {/* Checkbox */}
           <TouchableOpacity
             style={styles.checkboxContainer}
             onPress={() => setTaskIsFinished(!taskIsFinished)}
           >
             <MaterialIcons
-              name={taskIsFinished ? 'check-box' : 'check-box-outline-blank'} // Updated here
+              name={taskIsFinished ? 'check-box' : 'check-box-outline-blank'}
               size={24}
-              color={taskIsFinished ? '#007AFF' : '#999'} // Updated here
+              color={taskIsFinished ? '#007AFF' : '#999'}
             />
             <Text style={styles.checkboxLabel}>Is this task finished?</Text>
           </TouchableOpacity>
+          {/* Picker */}
           <Picker
-            selectedValue={selectedList} // Updated here
-            onValueChange={(itemValue: number) => setSelectedList(itemValue)} // Updated here
+            selectedValue={String(selectedList)}
+            onValueChange={(itemValue: string) => setSelectedList(Number(itemValue))}
             style={styles.input}
           >
             {lists.map((list) => (
-              <Picker.Item key={list.id} label={list.name} value={list.id} /> // Updated here
+              <Picker.Item key={list.id} label={list.name} value={String(list.id)} />
             ))}
           </Picker>
-          <Button title="Save Changes" onPress={onEditTask} />
+          {/* Buttons */}
+          <Button title="Save Changes" onPress={handleSave} />
           <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
             <Text style={styles.deleteButtonText}>Delete</Text>
           </TouchableOpacity>
@@ -118,16 +134,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   deleteButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#ff4d4d',
+    alignItems: 'center',
   },
   deleteButtonText: {
-    marginTop: 5,
-    color: 'red',
-    textAlign: 'center',
-    fontSize: 14,
-  },
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },  
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
