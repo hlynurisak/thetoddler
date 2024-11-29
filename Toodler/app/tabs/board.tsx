@@ -8,6 +8,8 @@ import getTextColor from '@/utils/getTextColor';
 import AddListModal from '@/components/AddListModal';
 import EditListModal from '@/components/EditListModal';
 import AddTaskModal from '@/components/AddTaskModal';
+import EditTaskModal from '@/components/EditTaskModal';
+import TaskItem from '@/components/TaskItem';
 
 export default function Board() {
   type BoardRouteProp = RouteProp<{ Board: { boardId: number } }, 'Board'>;
@@ -19,40 +21,46 @@ export default function Board() {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [boardLists, setBoardLists] = useState(data.lists);
   const [tasks, setTasks] = useState(data.tasks);
-  const [editingList, setEditingList] = useState<{ id: number; name: string; color: string; boardId: number; } | null>(null);
+  const [editingList, setEditingList] = useState(null);
   const [addTaskModalVisible, setAddTaskModalVisible] = useState(false);
-  const [selectedListId, setSelectedListId] = useState<number | null>(null);
+  const [editTaskModalVisible, setEditTaskModalVisible] = useState(false);
+  const [selectedListId, setSelectedListId] = useState(null);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   const BoardId = +(route.params?.boardId);
   const board = boards.find((b) => b.id === BoardId);
 
-  const getListsForBoard = (boardId: number) =>
+  const getListsForBoard = (boardId) =>
     boardLists.filter((list) => list.boardId === boardId);
 
-  const getTasksForList = (listId: number) =>
+  const getTasksForList = (listId) =>
     tasks.filter((task) => task.listId === listId);
 
-  const handleAddList = (newList: { id: number; name: string; color: string; boardId: number; }) => {
+  const handleAddList = (newList) => {
     setBoardLists((prevLists) => [...prevLists, newList]);
   };
 
-  const handleEditList = (updatedList: { id: number; name?: string; color?: string; boardId?: number; }) => {
+  const handleEditList = (updatedList) => {
     setBoardLists((prevLists) =>
-      prevLists.map((list) =>
-        list.id === updatedList.id
-          ? { ...list, ...updatedList }
-          : list
-      )
+      prevLists.map((list) => (list.id === updatedList.id ? updatedList : list))
     );
   };
 
-  const handleDeleteList = (listId: number) => {
+  const handleDeleteList = (listId) => {
     setBoardLists((prevLists) => prevLists.filter((list) => list.id !== listId));
   };
 
-  const handleAddTask = (newTask: { id: number; name: string; description: string; isFinished: boolean; listId: number; }) => {
+  const handleAddTask = (newTask) => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
     setAddTaskModalVisible(false);
+  };
+
+  const handleEditTask = (updatedTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+    );
+    setEditTaskModalVisible(false);
+    setSelectedTask(null);
   };
 
   if (!board) {
@@ -74,7 +82,9 @@ export default function Board() {
         renderItem={({ item: list }) => (
           <View style={[styles.list, { backgroundColor: list.color }]}>
             <View style={styles.listHeader}>
-              <Text style={[styles.listTitle, { color: getTextColor(list.color) }]}>{list.name}</Text>
+              <Text style={[styles.listTitle, { color: getTextColor(list.color) }]}>
+                {list.name}
+              </Text>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TouchableOpacity
                   onPress={() => {
@@ -99,12 +109,15 @@ export default function Board() {
               data={getTasksForList(list.id)}
               keyExtractor={(task) => task.id.toString()}
               renderItem={({ item: task }) => (
-                <View style={styles.task}>
-                  <Text style={styles.taskName}>
-                    {task.name} {task.isFinished ? '(Finished)' : '(Pending)'}
-                  </Text>
-                  <Text style={styles.taskDescription}>{task.description}</Text>
-                </View>
+                <TaskItem
+                  name={task.name}
+                  description={task.description}
+                  isFinished={task.isFinished}
+                  onPress={() => {
+                    setSelectedTask(task);
+                    setEditTaskModalVisible(true);
+                  }}
+                />
               )}
             />
           </View>
@@ -159,6 +172,16 @@ export default function Board() {
           }}
           onSave={handleAddTask}
           listId={selectedListId}
+        />
+      )}
+
+      {selectedTask && (
+        <EditTaskModal
+          visible={editTaskModalVisible}
+          onClose={() => setEditTaskModalVisible(false)}
+          onSave={handleEditTask}
+          task={selectedTask}
+          lists={boardLists.filter((list) => list.boardId === BoardId)}
         />
       )}
     </View>
@@ -224,20 +247,6 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 5,
     borderRadius: 4,
-  },
-  task: {
-    marginBottom: 5,
-    padding: 5,
-    backgroundColor: '#e9e9e9',
-    borderRadius: 4,
-  },
-  taskName: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  taskDescription: {
-    fontSize: 14,
-    color: '#555',
   },
   addButton: {
     position: 'absolute',
