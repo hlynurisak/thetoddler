@@ -5,7 +5,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useBoardsContext } from '@/hooks/useBoardsContext';
 import { useListsContext } from '@/hooks/useListsContext';
 import { useTasksContext } from '@/hooks/useTasksContext';
-import getTextColor from '@/utils/getTextColor';
 import AddListModal from '@/components/AddListModal';
 import EditListModal from '@/components/EditListModal';
 import AddTaskModal from '@/components/AddTaskModal';
@@ -91,11 +90,12 @@ export default function Board() {
           </View>
         }
         renderItem={({ item: list }) => (
-          <View style={[styles.list, { backgroundColor: list.color }]}>
+          <View style={[styles.list, { borderColor: list.color }]}>
             <View style={styles.listHeader}>
-              <Text style={[styles.listTitle, { color: getTextColor(list.color) }]}>
+              <Text style={[styles.listTitle, { color: 'black' }]}>
                 {list.name}
               </Text>
+
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TouchableOpacity
                   onPress={() => {
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
     borderRadius: 8,
-    borderWidth: 0.2,
+    borderWidth: 3,
     backgroundColor: '#f9f9f9',
   },
   listHeader: {
