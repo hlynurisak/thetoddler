@@ -10,7 +10,7 @@ import { useBoardsContext } from '@/hooks/useBoardsContext';
 export default function Boards() {
   const router = useRouter();
 
-  const [boards, setBoards] = useBoardsContext();
+  const {boards, setBoards} = useBoardsContext();
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [boardToEdit, setBoardToEdit] = useState<Board | null>(null);
