@@ -21,43 +21,51 @@ export default function Board() {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [boardLists, setBoardLists] = useState(data.lists);
   const [tasks, setTasks] = useState(data.tasks);
-  const [editingList, setEditingList] = useState(null);
+  const [editingList, setEditingList] = useState<{ id: number; name: string; color: string; boardId: number } | null>(null);
   const [addTaskModalVisible, setAddTaskModalVisible] = useState(false);
   const [editTaskModalVisible, setEditTaskModalVisible] = useState(false);
-  const [selectedListId, setSelectedListId] = useState(null);
-  const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedListId, setSelectedListId] = useState<number | null>(null);
+  const [selectedTask, setSelectedTask] = useState<{ id: number; name: string; description: string; isFinished: boolean; listId: number } | null>(null);
 
   const BoardId = +(route.params?.boardId);
   const board = boards.find((b) => b.id === BoardId);
 
-  const getListsForBoard = (boardId) =>
+  const getListsForBoard = (boardId: number) =>
     boardLists.filter((list) => list.boardId === boardId);
 
-  const getTasksForList = (listId) =>
+  const getTasksForList = (listId: number) =>
     tasks.filter((task) => task.listId === listId);
 
-  const handleAddList = (newList) => {
+  const handleAddList = (newList: { id: number; name: string; color: string; boardId: number; }) => {
     setBoardLists((prevLists) => [...prevLists, newList]);
   };
 
-  const handleEditList = (updatedList) => {
+  const handleEditList = (updatedList: { id: number; name?: string; color?: string; boardId?: number; }) => {
     setBoardLists((prevLists) =>
-      prevLists.map((list) => (list.id === updatedList.id ? updatedList : list))
+      prevLists.map((list) =>
+        list.id === updatedList.id
+          ? { ...list, ...updatedList }
+          : list
+      )
     );
   };
 
-  const handleDeleteList = (listId) => {
+  const handleDeleteList = (listId: number) => {
     setBoardLists((prevLists) => prevLists.filter((list) => list.id !== listId));
   };
 
-  const handleAddTask = (newTask) => {
+  const handleAddTask = (newTask: { id: number; name: string; description: string; isFinished: boolean; listId: number; }) => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
     setAddTaskModalVisible(false);
   };
 
-  const handleEditTask = (updatedTask) => {
+  const handleEditTask = (updatedTask: { id: number; }) => {
     setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+      prevTasks.map((task) =>
+        task.id === updatedTask.id
+          ? { ...task, ...updatedTask }
+          : task
+      )
     );
     setEditTaskModalVisible(false);
     setSelectedTask(null);

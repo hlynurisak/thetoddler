@@ -2,7 +2,13 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function BoardItem({ board, onPress, onEdit }: { board: any; onPress: () => void; onEdit: () => void }) {
+interface Board {
+  name: string;
+  thumbnailPhoto: string;
+  description: string;
+}
+
+export default function BoardItem({ board, onPress, onEdit }: { board: Board; onPress: () => void; onEdit: () => void }) {
   return (
     <View style={styles.board}>
       <View style={styles.titleRow}>

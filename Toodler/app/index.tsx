@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { View, FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useRouter } from 'expo-router';
+import initialData from '@/data.json';
 import BoardItem from '@/components/BoardItem';
 import AddBoardModal from '@/components/AddBoardModal';
+import { createBoard, Board } from '@/utils/dataManager';
 import EditBoardModal from '@/components/EditBoardModal';
-import { useBoardsContext } from '@/hooks/useBoardsContext'; 
-import { Board } from '@/contexts/BoardsContext'; 
-
 
 export default function Boards() {
   const router = useRouter();
-  const { boards, setBoards } = useBoardsContext(); // Use boards from context
-  
+
+  const [boards, setBoards] = useState(initialData.boards);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [boardToEdit, setBoardToEdit] = useState<Board | null>(null);
@@ -22,19 +21,16 @@ export default function Boards() {
   const [newBoardPhoto, setNewBoardPhoto] = useState('');
 
   const handleCreateBoard = () => {
-    // Create a new board
-    const newBoard: Board = {
-      id: Date.now(), // Or use a better unique ID generator
-      name: newBoardName,
-      description: newBoardDescription,
-      thumbnailPhoto: newBoardPhoto,
-    };
-    setBoards([...boards, newBoard]);
-    // Clear the input fields
+    // Empty the input fields
     setNewBoardName('');
     setNewBoardDescription('');
     setNewBoardPhoto('');
-    // Close the modal
+    // Create a new board
+    createBoard(boards, setBoards, newBoardName, newBoardDescription, newBoardPhoto);
+    // Empty variables again and close the modal
+    setNewBoardName('');
+    setNewBoardDescription('');
+    setNewBoardPhoto('');
     setAddModalVisible(false);
   };
 
@@ -57,18 +53,6 @@ export default function Boards() {
     setNewBoardPhoto('');
   };
 
-  const handleDeleteBoard = () => {
-    if (boardToEdit) {
-      setBoards((prevBoards) => prevBoards.filter((board) => board.id !== boardToEdit.id));
-      setBoardToEdit(null);
-      setEditModalVisible(false);
-      // Clear inputs
-      setNewBoardName('');
-      setNewBoardDescription('');
-      setNewBoardPhoto('');
-    }
-  };
-
   const openEditModal = (board: Board) => {
     setBoardToEdit(board);
     setNewBoardName(board.name);
@@ -84,7 +68,7 @@ export default function Boards() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item: board }) => (
           <BoardItem
-            board={board}
+            board={{ ...board, description: board.description || '' }}
             onPress={() => router.push(`/tabs/board?boardId=${board.id}`)}
             onEdit={() => openEditModal(board)}
           />
@@ -118,7 +102,13 @@ export default function Boards() {
           setBoardDescription={setNewBoardDescription}
           boardPhoto={newBoardPhoto}
           setBoardPhoto={setNewBoardPhoto}
-          onDelete={handleDeleteBoard}
+          onDelete={() => {
+            setBoards((prevBoards) => prevBoards.filter((board) => board.id !== boardToEdit.id));
+            setNewBoardName('');
+            setNewBoardDescription('');
+            setNewBoardPhoto('');
+            setEditModalVisible(false);
+          }}
         />
       )}
     </View>
