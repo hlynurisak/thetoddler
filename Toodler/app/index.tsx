@@ -10,7 +10,7 @@ import { useBoardsContext } from '@/hooks/useBoardsContext';
 export default function Boards() {
   const router = useRouter();
 
-  const {boards, setBoards} = useBoardsContext();
+  const { boards, setBoards } = useBoardsContext();
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [boardToEdit, setBoardToEdit] = useState<Board | null>(null);
@@ -30,7 +30,7 @@ export default function Boards() {
     };
 
     setBoards([...boards, newBoard]);
-    // Empty variables again and close the modal
+    // Reset state and close modal
     setNewBoardName('');
     setNewBoardDescription('');
     setNewBoardPhoto('');
@@ -50,7 +50,7 @@ export default function Boards() {
       setBoardToEdit(null);
       setEditModalVisible(false);
     }
-    // Clear variables
+    // Reset state
     setNewBoardName('');
     setNewBoardDescription('');
     setNewBoardPhoto('');
@@ -61,7 +61,7 @@ export default function Boards() {
       setBoards((prevBoards) => prevBoards.filter((board) => board.id !== boardToEdit.id));
       setBoardToEdit(null);
       setEditModalVisible(false);
-      // Clear inputs
+      // Reset state
       setNewBoardName('');
       setNewBoardDescription('');
       setNewBoardPhoto('');
@@ -98,7 +98,13 @@ export default function Boards() {
 
       <AddBoardModal
         visible={addModalVisible}
-        onClose={() => setAddModalVisible(false)}
+        onClose={() => {
+          setAddModalVisible(false);
+          // Reset states when modal is closed
+          setNewBoardName('');
+          setNewBoardDescription('');
+          setNewBoardPhoto('');
+        }}
         onAddBoard={handleCreateBoard}
         boardName={newBoardName}
         setBoardName={setNewBoardName}
@@ -107,11 +113,17 @@ export default function Boards() {
         boardPhoto={newBoardPhoto}
         setBoardPhoto={setNewBoardPhoto}
       />
-      
+
       {boardToEdit && (
         <EditBoardModal
           visible={editModalVisible}
-          onClose={() => setEditModalVisible(false)}
+          onClose={() => {
+            setEditModalVisible(false);
+            // Reset states when modal is closed
+            setNewBoardName('');
+            setNewBoardDescription('');
+            setNewBoardPhoto('');
+          }}
           onEditBoard={handleEditBoard}
           boardName={newBoardName}
           setBoardName={setNewBoardName}
