@@ -3,7 +3,8 @@ import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useBoardsContext } from '@/hooks/useBoardsContext';
-import data from '@/data.json';
+import { useListsContext } from '@/hooks/useListsContext';
+import { useTasksContext } from '@/hooks/useTasksContext';
 import getTextColor from '@/utils/getTextColor';
 import AddListModal from '@/components/AddListModal';
 import EditListModal from '@/components/EditListModal';
@@ -16,11 +17,11 @@ export default function Board() {
   const route = useRoute<BoardRouteProp>();
 
   const { boards } = useBoardsContext();
+  const { lists, setLists } = useListsContext();
+  const {tasks, setTasks} = useTasksContext();
 
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [boardLists, setBoardLists] = useState(data.lists);
-  const [tasks, setTasks] = useState(data.tasks);
   const [editingList, setEditingList] = useState<{ id: number; name: string; color: string; boardId: number } | null>(null);
   const [addTaskModalVisible, setAddTaskModalVisible] = useState(false);
   const [editTaskModalVisible, setEditTaskModalVisible] = useState(false);
@@ -31,17 +32,17 @@ export default function Board() {
   const board = boards.find((b) => b.id === BoardId);
 
   const getListsForBoard = (boardId: number) =>
-    boardLists.filter((list) => list.boardId === boardId);
+    lists.filter((list) => list.boardId === boardId);
 
   const getTasksForList = (listId: number) =>
     tasks.filter((task) => task.listId === listId);
 
   const handleAddList = (newList: { id: number; name: string; color: string; boardId: number; }) => {
-    setBoardLists((prevLists) => [...prevLists, newList]);
+    setLists((prevLists) => [...prevLists, newList]);
   };
 
   const handleEditList = (updatedList: { id: number; name?: string; color?: string; boardId?: number; }) => {
-    setBoardLists((prevLists) =>
+    setLists((prevLists) =>
       prevLists.map((list) =>
         list.id === updatedList.id
           ? { ...list, ...updatedList }
@@ -51,7 +52,7 @@ export default function Board() {
   };
 
   const handleDeleteList = (listId: number) => {
-    setBoardLists((prevLists) => prevLists.filter((list) => list.id !== listId));
+    setLists((prevLists) => prevLists.filter((list) => list.id !== listId));
   };
 
   const handleAddTask = (newTask: { id: number; name: string; description: string; isFinished: boolean; listId: number; }) => {
@@ -190,7 +191,7 @@ export default function Board() {
           onClose={() => setEditTaskModalVisible(false)}
           onSave={handleEditTask}
           task={selectedTask}
-          lists={boardLists.filter((list) => list.boardId === BoardId)}
+          lists={lists.filter((list) => list.boardId === BoardId)} // Use lists from context
         />
       )}
     </View>
