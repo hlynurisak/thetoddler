@@ -60,18 +60,24 @@ export default function Board() {
     setAddTaskModalVisible(false);
   };
 
-  const handleEditTask = (updatedTask: { id: number; }) => {
+  const handleEditTask = (updatedTask: {
+    id: number;
+    name: string;
+    description: string;
+    isFinished: boolean;
+    listId: number;
+  }) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
-        task.id === updatedTask.id
-          ? { ...task, ...updatedTask }
-          : task
+        task.id === updatedTask.id ? updatedTask : task
       )
     );
-    setEditTaskModalVisible(false);
-    setSelectedTask(null);
   };
 
+  const handleDeleteTask = (taskId: number) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  };
+  
   if (!board) {
     return <Text style={styles.errorText}>Board not found. Please select a valid board.</Text>;
   }
@@ -188,10 +194,37 @@ export default function Board() {
       {selectedTask && (
         <EditTaskModal
           visible={editTaskModalVisible}
-          onClose={() => setEditTaskModalVisible(false)}
-          onSave={handleEditTask}
-          task={selectedTask}
-          lists={lists.filter((list) => list.boardId === BoardId)} // Use lists from context
+          onClose={() => {
+            setEditTaskModalVisible(false);
+            setSelectedTask(null);
+          }}
+          onEditTask={(updatedTask) => {
+            handleEditTask(updatedTask);
+            setEditTaskModalVisible(false);
+            setSelectedTask(null);
+          }}
+          taskName={selectedTask.name}
+          setTaskName={(name) =>
+            setSelectedTask((prev) => (prev ? { ...prev, name } : prev))
+          }
+          taskDescription={selectedTask.description}
+          setTaskDescription={(description) =>
+            setSelectedTask((prev) => (prev ? { ...prev, description } : prev))
+          }
+          taskIsFinished={selectedTask.isFinished}
+          setTaskIsFinished={(isFinished) =>
+            setSelectedTask((prev) => (prev ? { ...prev, isFinished } : prev))
+          }
+          selectedList={selectedTask.listId}
+          setSelectedList={(listId) =>
+            setSelectedTask((prev) => (prev ? { ...prev, listId } : prev))
+          }
+          lists={getListsForBoard(BoardId)}
+          onDelete={() => {
+            handleDeleteTask(selectedTask.id);
+            setEditTaskModalVisible(false);
+            setSelectedTask(null);
+          }}
         />
       )}
     </View>

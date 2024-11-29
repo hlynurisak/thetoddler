@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
@@ -7,51 +6,32 @@ import { MaterialIcons } from '@expo/vector-icons';
 export default function EditTaskModal({
   visible,
   onClose,
-  onSave,
-  task,
+  onEditTask,
+  taskName,
+  setTaskName,
+  taskDescription,
+  setTaskDescription,
+  taskIsFinished,
+  setTaskIsFinished,
+  selectedList,
+  setSelectedList,
   lists,
+  onDelete,
 }: {
   visible: boolean;
   onClose: () => void;
-  onSave: (updatedTask: {
-    id: number;
-    name: string;
-    description: string;
-    isFinished: boolean;
-    listId: number;
-  }) => void;
-  task: {
-    id: number;
-    name: string;
-    description: string;
-    isFinished: boolean;
-    listId: number;
-  };
+  onEditTask: () => void;
+  taskName: string;
+  setTaskName: (text: string) => void;
+  taskDescription: string;
+  setTaskDescription: (text: string) => void;
+  taskIsFinished: boolean;
+  setTaskIsFinished: (value: boolean) => void;
+  selectedList: number;
+  setSelectedList: (value: number) => void; // Updated here
   lists: { id: number; name: string }[];
+  onDelete: () => void;
 }) {
-  const [name, setName] = React.useState(task.name);
-  const [description, setDescription] = React.useState(task.description);
-  const [status, setStatus] = React.useState(task.isFinished);
-  const [selectedList, setSelectedList] = React.useState(task.listId);
-
-  const handleSave = () => {
-    if (!name.trim()) {
-      alert('Task name is required');
-      return;
-    }
-
-    const updatedTask = {
-      ...task,
-      name,
-      description,
-      isFinished: status,
-      listId: selectedList,
-    };
-
-    onSave(updatedTask); // Pass the updated task back to the parent
-    onClose(); // Close the modal
-  };
-
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalBackground}>
@@ -65,36 +45,39 @@ export default function EditTaskModal({
           <TextInput
             style={styles.input}
             placeholder="Task Name"
-            value={name}
-            onChangeText={setName}
+            value={taskName}
+            onChangeText={setTaskName}
           />
           <TextInput
             style={styles.input}
             placeholder="Task Description"
-            value={description}
-            onChangeText={setDescription}
+            value={taskDescription}
+            onChangeText={setTaskDescription}
           />
           <TouchableOpacity
             style={styles.checkboxContainer}
-            onPress={() => setStatus(!status)}
+            onPress={() => setTaskIsFinished(!taskIsFinished)}
           >
             <MaterialIcons
-              name={status ? 'check-box' : 'check-box-outline-blank'}
+              name={taskIsFinished ? 'check-box' : 'check-box-outline-blank'} // Updated here
               size={24}
-              color={status ? '#007AFF' : '#999'}
+              color={taskIsFinished ? '#007AFF' : '#999'} // Updated here
             />
             <Text style={styles.checkboxLabel}>Is this task finished?</Text>
           </TouchableOpacity>
           <Picker
-            selectedValue={String(selectedList)}
-            onValueChange={(itemValue: string) => setSelectedList(Number(itemValue))}
+            selectedValue={selectedList} // Updated here
+            onValueChange={(itemValue: number) => setSelectedList(itemValue)} // Updated here
             style={styles.input}
           >
             {lists.map((list) => (
-              <Picker.Item key={list.id} label={list.name} value={String(list.id)} />
+              <Picker.Item key={list.id} label={list.name} value={list.id} /> // Updated here
             ))}
           </Picker>
-          <Button title="Save Changes" onPress={handleSave} />
+          <Button title="Save Changes" onPress={onEditTask} />
+          <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+            <Text style={styles.deleteButtonText}>Delete</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -133,6 +116,17 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     color: 'grey',
     fontSize: 18,
+  },
+  deleteButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+  },
+  deleteButtonText: {
+    marginTop: 5,
+    color: 'red',
+    textAlign: 'center',
+    fontSize: 14,
   },
   input: {
     borderWidth: 1,

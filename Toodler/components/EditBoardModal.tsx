@@ -53,7 +53,7 @@ export default function EditBoardModal({
             value={boardPhoto}
             onChangeText={setBoardPhoto}
           />
-          <Button title="Update" onPress={onEditBoard} />
+          <Button title="Save Changes" onPress={onEditBoard} />
           <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
             <Text style={styles.deleteButtonText}>Delete</Text>
           </TouchableOpacity>

@@ -43,7 +43,7 @@ export default function EditListModal({
             value={listColor}
             onChangeText={setListColor}
           />
-          <Button title="Update" onPress={onEditList} />
+          <Button title="Save Changes" onPress={onEditList} />
           <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
             <Text style={styles.deleteButtonText}>Delete</Text>
           </TouchableOpacity>
