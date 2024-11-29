@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity, Picker } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function EditTaskModal({
@@ -85,12 +86,12 @@ export default function EditTaskModal({
             <Text style={styles.checkboxLabel}>Is this task finished?</Text>
           </TouchableOpacity>
           <Picker
-            selectedValue={selectedList}
-            onValueChange={(itemValue: React.SetStateAction<number>) => setSelectedList(itemValue)}
+            selectedValue={String(selectedList)} // Convert selectedList to string
+            onValueChange={(itemValue: string) => setSelectedList(Number(itemValue))} // Convert back to number
             style={styles.input}
           >
             {lists.map((list) => (
-              <Picker.Item key={list.id} label={list.name} value={list.id} />
+              <Picker.Item key={list.id} label={list.name} value={String(list.id)} /> // Convert list.id to string
             ))}
           </Picker>
           <Button title="Save Changes" onPress={handleSave} />
