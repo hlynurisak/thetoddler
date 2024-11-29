@@ -86,12 +86,12 @@ export default function EditTaskModal({
             <Text style={styles.checkboxLabel}>Is this task finished?</Text>
           </TouchableOpacity>
           <Picker
-            selectedValue={String(selectedList)} // Convert selectedList to string
-            onValueChange={(itemValue: string) => setSelectedList(Number(itemValue))} // Convert back to number
+            selectedValue={String(selectedList)}
+            onValueChange={(itemValue: string) => setSelectedList(Number(itemValue))}
             style={styles.input}
           >
             {lists.map((list) => (
-              <Picker.Item key={list.id} label={list.name} value={String(list.id)} /> // Convert list.id to string
+              <Picker.Item key={list.id} label={list.name} value={String(list.id)} />
             ))}
           </Picker>
           <Button title="Save Changes" onPress={handleSave} />
