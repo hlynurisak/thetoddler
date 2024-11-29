@@ -31,6 +31,7 @@ export default function AddListModal({
     onSave(newList); // Pass the new list back to the parent
     setName(''); // Reset fields
     setColor('');
+    onClose(); // Close the modal
   };
 
   return (

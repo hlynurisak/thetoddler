@@ -79,6 +79,7 @@ export default function Boards() {
   return (
     <View style={styles.container}>
       <FlatList
+        style={styles.flatlist}
         data={boards}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item: board }) => (
@@ -130,17 +131,20 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#f5f5f5',
   },
+  flatlist: {
+    paddingBottom: 50,
+  },
   addButton: {
     position: 'absolute',
     bottom: 20,
-    left: 0,
-    right: 0,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#007AFF',
     padding: 10,
+    paddingHorizontal: 20,
     borderRadius: 10,
     marginHorizontal: 20,
+    alignSelf: 'center',
   },
   addButtonText: {
     color: '#fff',

@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 
 export default function AddTaskModal({
   visible,
@@ -66,16 +65,6 @@ export default function AddTaskModal({
             value={description}
             onChangeText={setDescription}
           />
-          <TouchableOpacity 
-            style={styles.checkboxContainer} 
-            onPress={() => setStatus(!status)}>
-            <MaterialIcons
-              name={status ? 'check-box' : 'check-box-outline-blank'}
-              size={24}
-              color={status ? '#007AFF' : '#999'}
-            />
-          </TouchableOpacity>
-          <Text style={styles.input}>Is This Task Finished?</Text>
           <Button title="Create Task" onPress={handleSave} />
         </View>
       </View>

@@ -31,8 +31,8 @@ export default function EditBoardModal({
         <View style={styles.modalContainer}>
           <View style={styles.titleRow}>
             <Text style={styles.modalText}>Edit Board</Text>
-            <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
-              <MaterialIcons name="delete" size={24} color="blue" />
+            <TouchableOpacity onPress={onClose}>
+              <Text style={styles.cancelButtonText}>X</Text>
             </TouchableOpacity>
           </View>
           <TextInput
@@ -43,7 +43,7 @@ export default function EditBoardModal({
           />
           <TextInput
             style={styles.input}
-            placeholder={boardDescription}
+            placeholder="Description (optional)"
             value={boardDescription}
             onChangeText={setBoardDescription}
           />
@@ -54,8 +54,8 @@ export default function EditBoardModal({
             onChangeText={setBoardPhoto}
           />
           <Button title="Update" onPress={onEditBoard} />
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.modalButtonText}>Close</Text>
+          <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+            <Text style={styles.deleteButtonText}>Delete</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -81,11 +81,32 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   modalText: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 15,
     textAlign: 'center',
+  },
+  cancelButtonText: {
+    color: 'grey',
+    fontSize: 18, // Match font size with modalText
+  },
+  deleteButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+  },
+  deleteButtonText: {
+    marginTop: 5,
+    color: 'red',
+    textAlign: 'center',
+    fontSize: 14,
   },
   input: {
     borderWidth: 1,
@@ -100,16 +121,5 @@ const styles = StyleSheet.create({
     color: 'blue',
     textAlign: 'center',
     fontSize: 14,
-  },
-  titleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  deleteButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
   },
 });

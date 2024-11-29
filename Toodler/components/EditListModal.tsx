@@ -27,13 +27,13 @@ export default function EditListModal({
         <View style={styles.modalContainer}>
           <View style={styles.titleRow}>
             <Text style={styles.modalText}>Edit List</Text>
-            <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
-              <MaterialIcons name="delete" size={24} color="red" />
+            <TouchableOpacity onPress={onClose}>
+              <Text style={styles.cancelButtonText}>X</Text>
             </TouchableOpacity>
           </View>
           <TextInput
             style={styles.input}
-            placeholder="List Name"
+            placeholder={listName}
             value={listName}
             onChangeText={setListName}
           />
@@ -44,8 +44,8 @@ export default function EditListModal({
             onChangeText={setListColor}
           />
           <Button title="Update" onPress={onEditList} />
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.modalButtonText}>Close</Text>
+          <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+            <Text style={styles.deleteButtonText}>Delete</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -76,11 +76,22 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center', // Centers the text within its container
+  },
+  cancelButtonText: {
+    color: 'grey',
+    fontSize: 18, // Match font size with modalText
   },
   deleteButton: {
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 10,
+  },
+  deleteButtonText: {
+    marginTop: 5,
+    color: 'red',
+    textAlign: 'center',
+    fontSize: 14,
   },
   input: {
     borderWidth: 1,
