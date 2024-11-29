@@ -60,19 +60,14 @@ export default function Board() {
     setAddTaskModalVisible(false);
   };
 
-  const handleEditTask = (updatedTask: {
-    id: number;
-    name: string;
-    description: string;
-    isFinished: boolean;
-    listId: number;
-  }) => {
+  const handleEditTask = (updatedTask: { id: number; name?: string; description?: string; isFinished?: boolean; listId?: number; }) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
-        task.id === updatedTask.id ? updatedTask : task
+        task.id === updatedTask.id ? { ...task, ...updatedTask } : task
       )
     );
   };
+  
 
   const handleDeleteTask = (taskId: number) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
@@ -201,19 +196,20 @@ export default function Board() {
             setEditTaskModalVisible(false);
             setSelectedTask(null);
           }}
-          taskName={selectedTask.name}
+          taskId={selectedTask?.id || 0}
+          taskName={selectedTask?.name || ''}
           setTaskName={(name) =>
             setSelectedTask((prev) => (prev ? { ...prev, name } : prev))
           }
-          taskDescription={selectedTask.description}
+          taskDescription={selectedTask?.description || ''}
           setTaskDescription={(description) =>
             setSelectedTask((prev) => (prev ? { ...prev, description } : prev))
           }
-          taskIsFinished={selectedTask.isFinished}
+          taskIsFinished={selectedTask?.isFinished || false}
           setTaskIsFinished={(isFinished) =>
             setSelectedTask((prev) => (prev ? { ...prev, isFinished } : prev))
           }
-          selectedList={selectedTask.listId}
+          selectedList={selectedTask?.listId || 0}
           setSelectedList={(listId) =>
             setSelectedTask((prev) => (prev ? { ...prev, listId } : prev))
           }
@@ -224,6 +220,7 @@ export default function Board() {
             setSelectedTask(null);
           }}
         />
+      
       )}
     </View>
   );

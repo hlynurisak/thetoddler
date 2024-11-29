@@ -7,6 +7,7 @@ export default function EditTaskModal({
   visible,
   onClose,
   onEditTask,
+  taskId,
   taskName,
   setTaskName,
   taskDescription,
@@ -27,6 +28,7 @@ export default function EditTaskModal({
     isFinished: boolean;
     listId: number;
   }) => void;
+  taskId: number;
   taskName: string;
   setTaskName: (text: string) => void;
   taskDescription: string;
@@ -39,8 +41,12 @@ export default function EditTaskModal({
   onDelete: () => void;
 }) {
   const handleSave = () => {
+    if (!taskName || !taskDescription) {
+      alert('Task name and description are required!');
+      return;
+    }
     const updatedTask = {
-      id: Date.now(),
+      id: taskId,
       name: taskName,
       description: taskDescription,
       isFinished: taskIsFinished,
@@ -48,6 +54,7 @@ export default function EditTaskModal({
     };
     onEditTask(updatedTask);
   };
+  
 
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
@@ -77,7 +84,7 @@ export default function EditTaskModal({
               size={24}
               color={taskIsFinished ? '#007AFF' : '#999'}
             />
-            <Text style={styles.checkboxLabel}>Is this task finished?</Text>
+            <Text style={styles.checkboxLabel}>Finished?</Text>
           </TouchableOpacity>
           {/* Picker */}
           <Picker
