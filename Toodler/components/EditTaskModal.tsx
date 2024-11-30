@@ -1,8 +1,17 @@
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Modal,
+  TouchableOpacity
+} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { MaterialIcons } from '@expo/vector-icons';
 
+// Modal component for editing a task
 export default function EditTaskModal({
   visible,
   onClose,
@@ -40,9 +49,10 @@ export default function EditTaskModal({
   lists: { id: number; name: string }[];
   onDelete: () => void;
 }) {
+  // Handles saving the edited task
   const handleSave = () => {
-    if (!taskName || !taskDescription) {
-      alert('Task name and description are required!');
+    if (!taskName) {
+      alert('Task name is required!');
       return;
     }
     const updatedTask = {
@@ -54,10 +64,14 @@ export default function EditTaskModal({
     };
     onEditTask(updatedTask);
   };
-  
 
   return (
-    <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
           <View style={styles.titleRow}>
@@ -66,7 +80,7 @@ export default function EditTaskModal({
               <Text style={styles.cancelButtonText}>X</Text>
             </TouchableOpacity>
           </View>
-          {/* Inputs */}
+          {/* Input fields for task details */}
           <TextInput
             style={styles.input}
             placeholder="Task Name"
@@ -79,7 +93,7 @@ export default function EditTaskModal({
             value={taskDescription}
             onChangeText={setTaskDescription}
           />
-          {/* Checkbox */}
+          {/* Checkbox to mark task as finished */}
           <TouchableOpacity
             style={styles.checkboxContainer}
             onPress={() => setTaskIsFinished(!taskIsFinished)}
@@ -91,7 +105,7 @@ export default function EditTaskModal({
             />
             <Text style={styles.checkboxLabel}>Finished?</Text>
           </TouchableOpacity>
-          {/* Picker */}
+          {/* Picker to select the list for the task */}
           <Picker
             selectedValue={String(selectedList)}
             onValueChange={(itemValue: string) => setSelectedList(Number(itemValue))}
@@ -101,7 +115,7 @@ export default function EditTaskModal({
               <Picker.Item key={list.id} label={list.name} value={String(list.id)} />
             ))}
           </Picker>
-          {/* Buttons */}
+          {/* Buttons to save changes or delete task */}
           <Button title="Save Changes" onPress={handleSave} />
           <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
             <Text style={styles.deleteButtonText}>Delete</Text>
@@ -156,7 +170,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
-  },  
+  },
   input: {
     borderWidth: 1,
     borderColor: '#ddd',

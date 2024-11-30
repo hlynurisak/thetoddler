@@ -1,6 +1,15 @@
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 
+// Modal component for adding a new task
 export default function AddTaskModal({
   visible,
   onClose,
@@ -18,41 +27,50 @@ export default function AddTaskModal({
   }) => void;
   listId: number;
 }) {
-    const [name, setName] = React.useState('');
-    const [description, setDescription] = React.useState('');
-    const [status, setStatus] = React.useState(false);
-  
-    const handleSave = () => {
-      if (!name.trim()) {
-        alert('Task name is required');
-        return;
-      }
-  
-      const newTask = {
-        id: Date.now(), // Generate a unique ID
-        name,
-        description,
-        isFinished: status,
-        listId,
-      };
-  
-      onSave(newTask); // Pass the new task back to the parent
-      // Reset the form fields
-      setName('');
-      setDescription('');
-      setStatus(false);
-      onClose(); // Close the modal
+  const [name, setName] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  const [status, setStatus] = React.useState(false);
+
+  // Handles saving the new task
+  const handleSave = () => {
+    if (!name.trim()) {
+      alert('Task name is required');
+      return;
+    }
+
+    const newTask = {
+      id: Date.now(),
+      name,
+      description,
+      isFinished: status,
+      listId,
     };
+
+    onSave(newTask);
+    // Reset form fields
+    setName('');
+    setDescription('');
+    setStatus(false);
+    onClose();
+  };
+
   return (
-    <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
+          {/* Header with title and close button */}
           <View style={styles.headerRow}>
             <Text style={styles.modalText}>Create New Task</Text>
             <TouchableOpacity onPress={onClose}>
               <Text style={styles.cancelButtonText}>X</Text>
             </TouchableOpacity>
           </View>
+          {/* Input fields for task details */}
           <TextInput
             style={styles.input}
             placeholder="Task Name"
@@ -65,6 +83,7 @@ export default function AddTaskModal({
             value={description}
             onChangeText={setDescription}
           />
+          {/* Button to save the new task */}
           <Button title="Create Task" onPress={handleSave} />
         </View>
       </View>
@@ -85,7 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: '#000', // Shadow properties for iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -94,16 +113,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15, // Adds spacing between the header and the input fields
+    marginBottom: 15,
   },
   modalText: {
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center', // Centers the text within its container
+    textAlign: 'center',
   },
   cancelButtonText: {
     color: 'grey',
-    fontSize: 18, // Match font size with modalText
+    fontSize: 18,
   },
   input: {
     borderWidth: 1,
@@ -120,12 +139,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   container: {
-    flexDirection: 'row', // Arrange items horizontally
-    alignItems: 'center', // Align items vertically centered
+    flexDirection: 'row',
+    alignItems: 'center',
     margin: 10,
   },
   checkboxContainer: {
-    marginRight: 8, // Space between the checkbox and the label
+    marginRight: 8,
   },
   label: {
     fontSize: 16,

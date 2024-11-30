@@ -11,14 +11,18 @@ import AddTaskModal from '@/components/AddTaskModal';
 import EditTaskModal from '@/components/EditTaskModal';
 import TaskItem from '@/components/TaskItem';
 
+// Main component for displaying a board with its lists and tasks
 export default function Board() {
+  // Define route prop types to extract boardId from navigation parameters
   type BoardRouteProp = RouteProp<{ Board: { boardId: number } }, 'Board'>;
   const route = useRoute<BoardRouteProp>();
 
+  // Access boards, lists, and tasks from context
   const { boards } = useBoardsContext();
   const { lists, setLists } = useListsContext();
-  const {tasks, setTasks} = useTasksContext();
+  const { tasks, setTasks } = useTasksContext();
 
+  // State variables for modal visibility and selected items
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingList, setEditingList] = useState<{ id: number; name: string; color: string; boardId: number } | null>(null);
@@ -27,15 +31,18 @@ export default function Board() {
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
   const [selectedTask, setSelectedTask] = useState<{ id: number; name: string; description: string; isFinished: boolean; listId: number } | null>(null);
 
+  // Get the board ID from route parameters and find the corresponding board
   const BoardId = +(route.params?.boardId);
   const board = boards.find((b) => b.id === BoardId);
 
+  // Functions to filter lists and tasks based on board or list IDs
   const getListsForBoard = (boardId: number) =>
     lists.filter((list) => list.boardId === boardId);
 
   const getTasksForList = (listId: number) =>
     tasks.filter((task) => task.listId === listId);
 
+  // Handlers for adding, editing, and deleting lists
   const handleAddList = (newList: { id: number; name: string; color: string; boardId: number; }) => {
     setLists((prevLists) => [...prevLists, newList]);
   };
@@ -54,6 +61,7 @@ export default function Board() {
     setLists((prevLists) => prevLists.filter((list) => list.id !== listId));
   };
 
+  // Handlers for adding, editing, and deleting tasks
   const handleAddTask = (newTask: { id: number; name: string; description: string; isFinished: boolean; listId: number; }) => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
     setAddTaskModalVisible(false);
@@ -67,22 +75,24 @@ export default function Board() {
     );
   };
   
-
   const handleDeleteTask = (taskId: number) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
   
+  // If the board is not found, display an error message
   if (!board) {
     return <Text style={styles.errorText}>Board not found. Please select a valid board.</Text>;
   }
 
   return (
     <View style={styles.container}>
+      {/* Render the lists for the board */}
       <FlatList
         style={styles.flatlist}
         data={getListsForBoard(BoardId)}
         keyExtractor={(list) => list.id.toString()}
         ListHeaderComponent={
+          // Header component showing board details
           <View style={styles.boardDetails}>
             <Image source={{ uri: board.thumbnailPhoto }} style={styles.boardImage} />
             <Text style={styles.boardTitle}>{board.name}</Text>
@@ -97,6 +107,7 @@ export default function Board() {
               </Text>
 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                {/* Button to add a new task to the list */}
                 <TouchableOpacity
                   onPress={() => {
                     setAddTaskModalVisible(true);
@@ -106,6 +117,7 @@ export default function Board() {
                 >
                   <MaterialIcons name="add" size={24} color="black" />
                 </TouchableOpacity>
+                {/* Button to edit the list */}
                 <TouchableOpacity
                   onPress={() => {
                     setEditingList(list);
@@ -116,6 +128,7 @@ export default function Board() {
                 </TouchableOpacity>
               </View>
             </View>
+            {/* Render the tasks within the list */}
             <FlatList
               data={getTasksForList(list.id)}
               keyExtractor={(task) => task.id.toString()}
@@ -136,10 +149,12 @@ export default function Board() {
         contentContainerStyle={{ paddingBottom: 50 }}
       />
 
+      {/* Button to create a new list */}
       <TouchableOpacity style={styles.addButton} onPress={() => setAddModalVisible(true)}>
         <Text style={styles.addButtonText}>Create New List</Text>
       </TouchableOpacity>
 
+      {/* Modals for adding and editing lists */}
       <AddListModal
         boardId={BoardId}
         visible={addModalVisible}
@@ -175,6 +190,7 @@ export default function Board() {
         />
       )}
 
+      {/* Modals for adding and editing tasks */}
       {selectedListId && (
         <AddTaskModal
           visible={addTaskModalVisible}
@@ -220,12 +236,12 @@ export default function Board() {
             setSelectedTask(null);
           }}
         />
-      
       )}
     </View>
   );
 }
 
+// Styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,

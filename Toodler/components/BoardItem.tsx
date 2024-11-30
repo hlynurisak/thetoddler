@@ -1,30 +1,54 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
+// Interface for the Board object
 interface Board {
   name: string;
   thumbnailPhoto: string;
   description: string;
 }
 
-export default function BoardItem({ board, onPress, onEdit }: { board: Board; onPress: () => void; onEdit: () => void }) {
+// Component to render a single board item
+export default function BoardItem({
+  board,
+  onPress,
+  onEdit,
+}: {
+  board: Board;
+  onPress: () => void;
+  onEdit: () => void;
+}) {
   return (
     <View style={styles.board}>
       <View style={styles.titleRow}>
         <Text style={styles.boardTitle}>{board.name}</Text>
+        {/* Button to edit the board */}
         <TouchableOpacity style={styles.editButton} onPress={onEdit}>
           <MaterialIcons name="more-vert" size={24} color="blue" />
         </TouchableOpacity>
       </View>
+      {/* Pressable image to navigate to the board */}
       <Pressable onPress={onPress}>
-        <Image source={{ uri: board.thumbnailPhoto }} style={styles.boardThumbnail} />
+        <Image
+          source={{ uri: board.thumbnailPhoto }}
+          style={styles.boardThumbnail}
+        />
       </Pressable>
+      {/* Display the board description */}
       <Text>{board.description}</Text>
     </View>
   );
 }
 
+// Styles for the BoardItem component
 const styles = StyleSheet.create({
   board: {
     marginBottom: 20,

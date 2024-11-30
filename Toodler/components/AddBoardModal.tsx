@@ -1,7 +1,17 @@
 import React from 'react';
-import { View, Text, TextInput, Modal, StyleSheet, Button, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Modal,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
+// Modal component for adding a new board
 export default function AddBoardModal({
   visible,
   onClose,
@@ -23,6 +33,7 @@ export default function AddBoardModal({
   boardPhoto: string;
   setBoardPhoto: (text: string) => void;
 }) {
+  // Function to pick an image from the device's gallery
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -44,15 +55,22 @@ export default function AddBoardModal({
   };
 
   return (
-    <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
+          {/* Header with title and close button */}
           <View style={styles.headerRow}>
             <Text style={styles.modalText}>Create New Board</Text>
             <TouchableOpacity onPress={onClose}>
               <Text style={styles.cancelButtonText}>X</Text>
             </TouchableOpacity>
           </View>
+          {/* Input fields for board details */}
           <TextInput
             style={styles.input}
             placeholder="Board Name"
@@ -71,14 +89,22 @@ export default function AddBoardModal({
             value={boardPhoto}
             onChangeText={setBoardPhoto}
           />
-          <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
+          {/* Button to pick an image from the gallery */}
+          <TouchableOpacity
+            style={styles.imagePickerButton}
+            onPress={pickImage}
+          >
             <Text style={styles.imagePickerButtonText}>Pick an Image</Text>
           </TouchableOpacity>
+          {/* Display selected image or a placeholder message */}
           {boardPhoto ? (
             <Image source={{ uri: boardPhoto }} style={styles.imagePreview} />
           ) : (
-            <Text style={styles.noImageText}>No Image Selected or URL Entered</Text>
+            <Text style={styles.noImageText}>
+              No Image Selected or URL Entered
+            </Text>
           )}
+          {/* Button to create the new board */}
           <Button title="Create Board" onPress={onAddBoard} />
         </View>
       </View>

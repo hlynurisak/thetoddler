@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 
-/* Custom type declarations */
+// Type definition for a Board
 export type Board = {
   id: number;
   name: string;
@@ -8,6 +8,7 @@ export type Board = {
   thumbnailPhoto: string;
 };
 
+// Type definition for a List
 export type List = {
   id: number;
   name: string;
@@ -15,6 +16,7 @@ export type List = {
   boardId: number;
 };
 
+// Type definition for a Task
 export type Task = {
   id: number;
   name: string;
@@ -23,9 +25,7 @@ export type Task = {
   listId: number;
 };
 
-
-/* Create and update data */
-// Create a new board with given parameters and auto-incremented ID
+// Adds a new board to the boards array
 export function createBoard(
   boards: Board[],
   setBoards: Dispatch<SetStateAction<Board[]>>,
@@ -42,7 +42,7 @@ export function createBoard(
   setBoards([...boards, newBoard]);
 }
 
-// Update the board with the given ID
+// Updates an existing board with the given ID
 export function updateBoard(
   boards: Board[],
   setBoards: Dispatch<SetStateAction<Board[]>>,
@@ -65,6 +65,7 @@ export function updateBoard(
   setBoards(updatedBoards);
 }
 
+// Adds a new list to the lists array
 export function createList(
   lists: List[],
   setLists: Dispatch<SetStateAction<List[]>>,
@@ -81,6 +82,7 @@ export function createList(
   setLists([...lists, newList]);
 }
 
+// Updates an existing list with the given ID
 export function updateList(
   lists: List[],
   setLists: Dispatch<SetStateAction<List[]>>,

@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 import ColorPicker, { Preview, Panel1 } from 'reanimated-color-picker';
 
+// Modal component for adding a new list
 export default function AddListModal({
   visible,
   onClose,
@@ -16,6 +25,7 @@ export default function AddListModal({
   const [name, setName] = useState('');
   const [color, setColor] = useState('#ffffff'); // Default color is white
 
+  // Save the new list and reset fields
   const handleSave = () => {
     if (!name) {
       alert('Name is required');
@@ -23,16 +33,16 @@ export default function AddListModal({
     }
 
     const newList = {
-      id: Date.now(), // Unique ID for the new list
+      id: Date.now(), // Generate unique ID
       name,
-      color: color,
-      boardId, // Attach the board ID passed as a prop
+      color,
+      boardId,
     };
 
-    onSave(newList); // Pass the new list back to the parent
-    setName(''); // Reset fields
+    onSave(newList);
+    setName('');
     setColor('');
-    onClose(); // Close the modal
+    onClose();
   };
 
   return (
@@ -51,20 +61,24 @@ export default function AddListModal({
             value={name}
             onChangeText={setName}
           />
-          <ColorPicker style={{ width: '100%' }} value={color} onChange={ (color) => setColor(color.hex) } onComplete={ (color) => setColor(color.hex) }>
-            <Preview 
+          <ColorPicker
+            style={{ width: '100%' }}
+            value={color}
+            onChange={(color) => setColor(color.hex)}
+            onComplete={(color) => setColor(color.hex)}
+          >
+            <Preview
               style={{ width: '100%', height: 40, marginBottom: 10 }}
               hideInitialColor={true}
             />
             <Panel1 />
           </ColorPicker>
-          <Button title="Save" onPress={handleSave}/>
+          <Button title="Save" onPress={handleSave} />
         </View>
       </View>
     </Modal>
   );
 }
-
 
 const styles = StyleSheet.create({
   modalBackground: {
@@ -88,16 +102,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15, // Adds spacing between the header and the input fields
+    marginBottom: 15,
   },
   modalText: {
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center', // Centers the text within its container
+    textAlign: 'center',
   },
   cancelButtonText: {
     color: 'grey',
-    fontSize: 18, // Match font size with modalText
+    fontSize: 18,
   },
   input: {
     borderWidth: 1,

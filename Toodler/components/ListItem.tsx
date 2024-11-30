@@ -3,15 +3,18 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import AddTaskModal from './AddTaskModal';
 
+// Interface defining the props for the ListItem component
 interface ListItemProps {
   name: string;
   color: string;
   listId: number;
 }
 
+// Component representing a list item with the ability to add tasks
 export default function ListItem({ name, color, listId }: ListItemProps) {
   const [AddTaskModalVisible, setAddTaskModalVisible] = useState(false);
 
+  // Opens the AddTaskModal when the add button is pressed
   const handleAddTask = () => {
     setAddTaskModalVisible(true);
   };
@@ -35,6 +38,14 @@ export default function ListItem({ name, color, listId }: ListItemProps) {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 10, borderRadius: 8, marginVertical: 5 },
-  name: { fontSize: 16, fontWeight: 'bold', color: '#fff' },
+  container: {
+    padding: 10,
+    borderRadius: 8,
+    marginVertical: 5,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
 });

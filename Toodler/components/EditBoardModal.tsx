@@ -1,7 +1,17 @@
 import React from 'react';
-import { Button, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
+import {
+  Button,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Image,
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
+// Modal component for editing a board
 export default function EditBoardModal({
   visible,
   onClose,
@@ -25,6 +35,7 @@ export default function EditBoardModal({
   setBoardPhoto: (text: string) => void;
   onDelete: () => void;
 }) {
+  // Function to pick an image from the device's gallery
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -45,43 +56,62 @@ export default function EditBoardModal({
     }
   };
 
+  // Render the modal for editing the board
   return (
-    <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
+          {/* Header with title and close button */}
           <View style={styles.titleRow}>
             <Text style={styles.modalText}>Edit Board</Text>
             <TouchableOpacity onPress={onClose}>
               <Text style={styles.cancelButtonText}>X</Text>
             </TouchableOpacity>
           </View>
+          {/* Input for board name */}
           <TextInput
             style={styles.input}
             placeholder="Board Name"
             value={boardName}
             onChangeText={setBoardName}
           />
+          {/* Input for board description */}
           <TextInput
             style={styles.input}
             placeholder="Description (optional)"
             value={boardDescription}
             onChangeText={setBoardDescription}
           />
+          {/* Input for board photo URL */}
           <TextInput
             style={styles.input}
             placeholder="Enter Photo URL (Optional)"
             value={boardPhoto}
             onChangeText={setBoardPhoto}
           />
-          <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
+          {/* Button to pick an image from the gallery */}
+          <TouchableOpacity
+            style={styles.imagePickerButton}
+            onPress={pickImage}
+          >
             <Text style={styles.imagePickerButtonText}>Pick an Image</Text>
           </TouchableOpacity>
+          {/* Display selected image or placeholder text */}
           {boardPhoto ? (
             <Image source={{ uri: boardPhoto }} style={styles.imagePreview} />
           ) : (
-            <Text style={styles.noImageText}>No Image Selected or URL Entered</Text>
+            <Text style={styles.noImageText}>
+              No Image Selected or URL Entered
+            </Text>
           )}
+          {/* Button to save changes */}
           <Button title="Save Changes" onPress={onEditBoard} />
+          {/* Button to delete the board */}
           <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
             <Text style={styles.deleteButtonText}>Delete</Text>
           </TouchableOpacity>
@@ -91,10 +121,11 @@ export default function EditBoardModal({
   );
 }
 
+// Styles for the modal component
 const styles = StyleSheet.create({
   modalBackground: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -103,11 +134,11 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 10,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    elevation: 5, // Android shadow
+    shadowColor: '#000', // iOS shadow color
+    shadowOffset: { width: 0, height: 2 }, // iOS shadow offset
+    shadowOpacity: 0.25, // iOS shadow opacity
+    shadowRadius: 4, // iOS shadow radius
   },
   titleRow: {
     flexDirection: 'row',
@@ -129,7 +160,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#ff4d4d',
+    backgroundColor: '#ff4d4d', // Red background for delete button
     alignItems: 'center',
   },
   deleteButtonText: {
@@ -146,7 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   imagePickerButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#007AFF', // Blue background for image picker button
     padding: 10,
     borderRadius: 5,
     marginVertical: 10,

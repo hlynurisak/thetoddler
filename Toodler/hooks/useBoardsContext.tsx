@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { BoardsContext, BoardsContextType } from '@/contexts/BoardsContext';
 
+// Custom hook to access the boards context
 export function useBoardsContext(): BoardsContextType {
   const context = useContext(BoardsContext);
 

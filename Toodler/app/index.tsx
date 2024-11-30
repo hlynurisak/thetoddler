@@ -7,29 +7,34 @@ import { Board } from '@/utils/dataManager';
 import EditBoardModal from '@/components/EditBoardModal';
 import { useBoardsContext } from '@/hooks/useBoardsContext';
 
+// Component to display and manage boards
 export default function Boards() {
   const router = useRouter();
 
+  // Access boards from context
   const { boards, setBoards } = useBoardsContext();
+
+  // State variables for modal visibility and board editing
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [boardToEdit, setBoardToEdit] = useState<Board | null>(null);
 
-  // States for new board creation & edits
+  // State variables for new or edited board details
   const [newBoardName, setNewBoardName] = useState('');
   const [newBoardDescription, setNewBoardDescription] = useState('');
   const [newBoardPhoto, setNewBoardPhoto] = useState('');
 
+  // Create a new board
   const handleCreateBoard = () => {
-    // Create a new board
     const newBoard: Board = {
-      id: Date.now(), // Unique ID for the new board
+      id: Date.now(), // Unique ID
       name: newBoardName,
       description: newBoardDescription,
       thumbnailPhoto: newBoardPhoto,
     };
 
     setBoards([...boards, newBoard]);
+
     // Reset state and close modal
     setNewBoardName('');
     setNewBoardDescription('');
@@ -37,30 +42,24 @@ export default function Boards() {
     setAddModalVisible(false);
   };
 
+  // Edit an existing board
   const handleEditBoard = () => {
-    // Edit selected board
     if (boardToEdit) {
       setBoards((prevBoards) =>
         prevBoards.map((board) =>
           board.id === boardToEdit.id
-            ? { ...board, name: newBoardName, description: newBoardDescription, thumbnailPhoto: newBoardPhoto }
+            ? {
+                ...board,
+                name: newBoardName,
+                description: newBoardDescription,
+                thumbnailPhoto: newBoardPhoto,
+              }
             : board
         )
       );
       setBoardToEdit(null);
       setEditModalVisible(false);
-    }
-    // Reset state
-    setNewBoardName('');
-    setNewBoardDescription('');
-    setNewBoardPhoto('');
-  };
 
-  const handleDeleteBoard = () => {
-    if (boardToEdit) {
-      setBoards((prevBoards) => prevBoards.filter((board) => board.id !== boardToEdit.id));
-      setBoardToEdit(null);
-      setEditModalVisible(false);
       // Reset state
       setNewBoardName('');
       setNewBoardDescription('');
@@ -68,6 +67,21 @@ export default function Boards() {
     }
   };
 
+  // Delete a board
+  const handleDeleteBoard = () => {
+    if (boardToEdit) {
+      setBoards((prevBoards) => prevBoards.filter((board) => board.id !== boardToEdit.id));
+      setBoardToEdit(null);
+      setEditModalVisible(false);
+
+      // Reset state
+      setNewBoardName('');
+      setNewBoardDescription('');
+      setNewBoardPhoto('');
+    }
+  };
+
+  // Open edit modal for a specific board
   const openEditModal = (board: Board) => {
     setBoardToEdit(board);
     setNewBoardName(board.name);
@@ -78,6 +92,7 @@ export default function Boards() {
 
   return (
     <View style={styles.container}>
+      {/* List of boards */}
       <FlatList
         style={styles.flatlist}
         data={boards}
@@ -92,15 +107,17 @@ export default function Boards() {
         contentContainerStyle={{ paddingBottom: 50 }}
       />
 
+      {/* Button to add a new board */}
       <TouchableOpacity style={styles.addButton} onPress={() => setAddModalVisible(true)}>
         <Text style={styles.addButtonText}>Create New Board</Text>
       </TouchableOpacity>
 
+      {/* Modal for adding a new board */}
       <AddBoardModal
         visible={addModalVisible}
         onClose={() => {
           setAddModalVisible(false);
-          // Reset states when modal is closed
+          // Reset state when modal is closed
           setNewBoardName('');
           setNewBoardDescription('');
           setNewBoardPhoto('');
@@ -114,12 +131,13 @@ export default function Boards() {
         setBoardPhoto={setNewBoardPhoto}
       />
 
+      {/* Modal for editing an existing board */}
       {boardToEdit && (
         <EditBoardModal
           visible={editModalVisible}
           onClose={() => {
             setEditModalVisible(false);
-            // Reset states when modal is closed
+            // Reset state when modal is closed
             setNewBoardName('');
             setNewBoardDescription('');
             setNewBoardPhoto('');
@@ -138,6 +156,7 @@ export default function Boards() {
   );
 }
 
+// Styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
