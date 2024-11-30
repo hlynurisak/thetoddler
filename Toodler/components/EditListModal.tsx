@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import ColorPicker, { Preview, HueSlider } from 'reanimated-color-picker';
+import ColorPicker, { Preview, Panel1 } from 'reanimated-color-picker';
 
 
 export default function EditListModal({
@@ -42,12 +42,12 @@ export default function EditListModal({
             onChangeText={setListName}
           />
           <Text style={styles.colorPickerLabel}>Pick a Color:</Text>
-          <ColorPicker style={{ width: '100%' }} value={listColor} onComplete={updateColor}>
+          <ColorPicker style={{ width: '100%' }} value={listColor} onChange={updateColor} onComplete={updateColor}>
             <Preview 
               style={{ width: '100%', height: 40, marginBottom: 10 }}
               hideInitialColor={true}
             />
-            <HueSlider />
+            <Panel1 />
           </ColorPicker>
           <Button title="Save Changes" onPress={onEditList} />
           <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
