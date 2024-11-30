@@ -1,50 +1,18 @@
-# Welcome to your Expo app 👋
+# Toodler by Group 11
+Arna Guðjónsdóttir
+Emilie Victoria Bönström
+Hlynur Ísak Vilmundarson
+Róbert Orri Árnason
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Extras:
+ - Image picker
+   The user can pick a photo from their device library instead of inputing a link to an external image.
+ - Color picker
+   Instead of manually finding and writing a hex code for the desired color, we provided a more user friendly color picker in the create and edit list modal.
 
-## Get started
+## Testing environment
+ - This app has primarily been tested using the Expo Go app
+ - Web view has been used to a lesser extent for testing
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Known limitations
+ - An issue with the color picker library shows an error message upon saving a color when creating and editing a task. This has no observed effect on the app functionality outside the displayed error message in the Expo app
