@@ -60,7 +60,12 @@ export default function EditTaskModal({
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
-          <Text style={styles.modalText}>Edit Task</Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.modalText}>Edit List</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Text style={styles.cancelButtonText}>X</Text>
+            </TouchableOpacity>
+          </View>
           {/* Inputs */}
           <TextInput
             style={styles.input}
@@ -125,7 +130,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
-  headerRow: {
+  titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
