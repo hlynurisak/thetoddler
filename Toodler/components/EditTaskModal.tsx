@@ -61,7 +61,7 @@ export default function EditTaskModal({
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
           <View style={styles.titleRow}>
-            <Text style={styles.modalText}>Edit List</Text>
+            <Text style={styles.modalText}>Edit Task</Text>
             <TouchableOpacity onPress={onClose}>
               <Text style={styles.cancelButtonText}>X</Text>
             </TouchableOpacity>
