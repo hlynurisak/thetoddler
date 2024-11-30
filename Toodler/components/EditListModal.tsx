@@ -1,5 +1,7 @@
 import React from 'react';
 import { Button, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import ColorPicker, { Preview, HueSlider } from 'reanimated-color-picker';
+
 
 export default function EditListModal({
   visible,
@@ -20,6 +22,9 @@ export default function EditListModal({
   setListColor: (text: string) => void;
   onDelete: () => void;
 }) {
+  const updateColor = (colors: { hex: string }) => {
+    setListColor(colors.hex);
+  };
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalBackground}>
@@ -36,12 +41,14 @@ export default function EditListModal({
             value={listName}
             onChangeText={setListName}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Color (Optional)"
-            value={listColor}
-            onChangeText={setListColor}
-          />
+          <Text style={styles.colorPickerLabel}>Pick a Color:</Text>
+          <ColorPicker style={{ width: '100%' }} value={listColor} onComplete={updateColor}>
+            <Preview 
+              style={{ width: '100%', height: 40, marginBottom: 10 }}
+              hideInitialColor={true}
+            />
+            <HueSlider />
+          </ColorPicker>
           <Button title="Save Changes" onPress={onEditList} />
           <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
             <Text style={styles.deleteButtonText}>Delete</Text>
@@ -75,11 +82,11 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center', // Centers the text within its container
+    textAlign: 'center',
   },
   cancelButtonText: {
     color: 'grey',
-    fontSize: 18, // Match font size with modalText
+    fontSize: 18,
   },
   deleteButton: {
     paddingVertical: 5,
@@ -105,5 +112,9 @@ const styles = StyleSheet.create({
     color: 'blue',
     textAlign: 'center',
     fontSize: 14,
+  },
+  colorPickerLabel: {
+    fontSize: 14,
+    marginBottom: 10,
   },
 });
