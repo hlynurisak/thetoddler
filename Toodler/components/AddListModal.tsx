@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import ColorPicker, { Preview, Panel1 } from 'reanimated-color-picker';
 
 export default function AddListModal({
   visible,
@@ -13,7 +14,7 @@ export default function AddListModal({
   boardId: number;
 }) {
   const [name, setName] = useState('');
-  const [color, setColor] = useState('');
+  const [color, setColor] = useState('#ffffff'); // Default color is white
 
   const handleSave = () => {
     if (!name) {
@@ -24,7 +25,7 @@ export default function AddListModal({
     const newList = {
       id: Date.now(), // Unique ID for the new list
       name,
-      color: color || '#ffffff', // Default color if none is provided
+      color: color,
       boardId, // Attach the board ID passed as a prop
     };
 
@@ -50,12 +51,13 @@ export default function AddListModal({
             value={name}
             onChangeText={setName}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Color (optional)"
-            value={color}
-            onChangeText={setColor}
-          />
+          <ColorPicker style={{ width: '100%' }} value={color} onChange={ (color) => setColor(color.hex) } onComplete={ (color) => setColor(color.hex) }>
+            <Preview 
+              style={{ width: '100%', height: 40, marginBottom: 10 }}
+              hideInitialColor={true}
+            />
+            <Panel1 />
+          </ColorPicker>
           <Button title="Save" onPress={handleSave}/>
         </View>
       </View>
