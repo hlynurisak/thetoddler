@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import ColorPicker, { Preview, Panel1 } from 'reanimated-color-picker';
+import ColorPicker, { Preview, Panel1, HueSlider } from 'reanimated-color-picker';
 
 // Modal component for editing a list's name and color
 export default function EditListModal({
@@ -73,7 +73,12 @@ export default function EditListModal({
               style={{ width: '100%', height: 40, marginBottom: 10 }}
               hideInitialColor={true}
             />
-            <Panel1 />
+            <Panel1 
+              style={{ width: '100%', height: 200, marginBottom: 10 }}
+            />
+            <HueSlider 
+              style={{ width: '100%', height: 40, marginBottom: 10 }}
+            />
           </ColorPicker>
           {/* Button to save changes */}
           <Button title="Save Changes" onPress={onEditList} />
